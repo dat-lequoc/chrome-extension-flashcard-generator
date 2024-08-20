@@ -157,6 +157,12 @@ function exportFlashcardsCSV() {
   document.body.removeChild(link);
 }
 
+let flashcardCollections = {
+  flashcard: [],
+  explain: [],
+  language: []
+};
+
 function displayFlashcards(flashcards, mode) {
   if (!flashcardContainer) {
     console.error('Flashcard container not found');
@@ -166,6 +172,7 @@ function displayFlashcards(flashcards, mode) {
   flashcards.forEach(flashcard => {
     const flashcardElement = document.createElement('div');
     flashcardElement.className = 'flashcard';
+    flashcardElement.dataset.mode = mode;
     if (mode === 'language') {
       flashcardElement.innerHTML = `
         <div class="word"><b>${flashcard.word}</b>: ${flashcard.translation}</div>
