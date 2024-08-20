@@ -108,6 +108,14 @@ function generateFlashcards() {
   
   const mode = document.querySelector('.mode-btn.selected').dataset.mode;
   
+  if (mode === 'language') {
+    // Hide generate button in language mode
+    document.getElementById('generate-btn').style.display = 'none';
+    // Show instruction for language mode
+    showLanguageModeInstruction();
+    return;
+  }
+  
   showLoadingIndicator();
   
   chrome.runtime.sendMessage({
@@ -157,6 +165,25 @@ function displayFlashcards(flashcards, mode) {
     const flashcardElement = document.createElement('div');
     flashcardElement.className = 'flashcard';
     if (mode === 'language') {
+      flashcardElement.innerHTML = `
+        <div style="font-size: 1.2em; margin-bottom: 10px;"><b>${flashcard.word}</b>: ${flashcard.translation}</div>
+        <div>- ${flashcard.answer}</div>
+      `;
+    } else {
+      flashcardElement.innerHTML = `
+        <strong>Q: ${flashcard.question}</strong><br>
+        A: ${flashcard.answer}
+      `;
+    }
+    const removeBtn = document.createElement('button');
+    removeBtn.className = 'remove-btn';
+    removeBtn.textContent = 'Remove';
+    removeBtn.addEventListener('click', function() {
+      flashcardElement.remove();
+    });
+    flashcardElement.appendChild(removeBtn);
+    flashcardContainer.appendChild(flashcardElement);
+  });
       flashcardElement.innerHTML = `
         <div class="word">${flashcard.word}</div>
         <div class="translation">${flashcard.translation}</div>
@@ -269,3 +296,50 @@ document.addEventListener('DOMContentLoaded', () => {
 
 // Call this function after panel content is loaded
 lazyLoadPanelContent();
+function showLanguageModeInstruction() {
+  const instruction = document.createElement('div');
+  instruction.id = 'language-mode-instruction';
+  instruction.textContent = 'Choose a language and double-click on a word to translate';
+  instruction.style.cssText = `
+    position: fixed;
+    top: 10px;
+    left: 50%;
+    transform: translateX(-50%);
+    background-color: #f0f0f0;
+    padding: 10px;
+    border-radius: 5px;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+    z-index: 10000;
+  `;
+  document.body.appendChild(instruction);
+  setTimeout(() => {
+    instruction.remove();
+  }, 5000);
+}
+
+function handleLanguageModeSelection(event) {
+  if (mode !== 'language') return;
+
+  const selection = window.getSelection();
+  const word = selection.toString().trim();
+
+  if (word && word.length < 20) {
+    const range = selection.getRangeAt(0);
+    const span = document.createElement('span');
+    span.style.backgroundColor = 'yellow';
+    span.textContent = word;
+    range.deleteContents();
+    range.insertNode(span);
+
+    const selectedLanguageButton = document.querySelector('#language-buttons .mode-btn.selected');
+    if (selectedLanguageButton) {
+      const targetLanguage = selectedLanguageButton.dataset.language;
+      const phrase = getPhrase(range, word);
+      generateLanguageFlashcard(word, phrase, targetLanguage);
+    } else {
+      console.error('No language selected');
+    }
+  }
+}
+
+document.addEventListener('dblclick', handleLanguageModeSelection);
