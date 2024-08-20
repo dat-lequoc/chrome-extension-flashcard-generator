@@ -248,6 +248,8 @@ function addToCollection() {
     flashcards: newFlashcards
   }, () => {
     updateCollectionButtons();
+    // Remove all current flashcards from display
+    flashcards.forEach(fc => fc.remove());
   });
 }
 
