@@ -33,12 +33,14 @@ function clearCollection(mode) {
   });
 }
 
-async function generateFlashcards(text, mode, sendResponse) {
+async function generateFlashcards(text, mode, context, sendResponse) {
   try {
     const settings = await getSettings();
     if (!settings.apiKey) {
       throw new Error('API key not set. Please set it in the extension options.');
     }
+
+    settings.context = context; // Add context to settings
 
     const prompt = generatePrompt(text, mode, settings);
     console.log('Sending request with prompt:', prompt);
@@ -85,11 +87,15 @@ async function generateFlashcards(text, mode, sendResponse) {
 function generatePrompt(text, mode, settings) {
   switch (mode) {
     case 'flashcard':
-      return `${settings.flashcardPrompt}\n\nText: ${text}`;
+      return settings.flashcardPrompt.replace('{{TEXT}}', text);
     case 'explain':
-      return `${settings.explainPrompt}\n\nText: ${text}`;
+      return settings.explainPrompt.replace('{{TEXT}}', text);
     case 'language':
-      return `${settings.languagePrompt}\n\nText: ${text}`;
+      return settings.languagePrompt
+        .replace('{{WORD}}', text)
+        .replace('{{PHRASE}}', settings.context || '')
+        .replace('{{TRANSLATION_LANGUAGE}}', settings.translationLanguage)
+        .replace('{{TARGET_LANGUAGE2}}', settings.targetLanguage);
     default:
       return `Summarize the key points of the following text:\n\n${text}`;
   }

@@ -140,10 +140,18 @@ function generateFlashcards() {
   
   showLoadingIndicator();
   
+  let context = '';
+  if (mode === 'language') {
+    const selection = window.getSelection();
+    const range = selection.getRangeAt(0);
+    context = getPhrase(range, selectedText);
+  }
+  
   chrome.runtime.sendMessage({
     action: 'generateFlashcards',
     text: selectedText,
-    mode: mode
+    mode: mode,
+    context: context
   }, response => {
     hideLoadingIndicator();
     if (response.success) {
