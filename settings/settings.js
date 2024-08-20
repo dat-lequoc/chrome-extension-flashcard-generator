@@ -57,31 +57,18 @@ function resetToDefaults() {
       fetch(chrome.runtime.getURL('prompts/explain_prompt.txt')).then(response => response.text()),
       fetch(chrome.runtime.getURL('prompts/language_prompt.txt')).then(response => response.text())
     ]).then(([defaultFlashcardPrompt, defaultExplainPrompt, defaultLanguagePrompt]) => {
-      const defaultSettings = {
-        apiKey: '',
-        model: 'claude-3-5-sonnet-20240620',
-        flashcardPrompt: defaultFlashcardPrompt.trim(),
-        explainPrompt: defaultExplainPrompt.trim(),
-        languagePrompt: defaultLanguagePrompt.trim(),
-        autoPopup: true,
-        translationLanguage: 'Vietnamese',
-        targetLanguage: 'English'
-      };
-
       // Update form fields with default values
-      apiKeyInput.value = defaultSettings.apiKey;
-      modelSelect.value = defaultSettings.model;
-      flashcardPromptTextarea.value = defaultSettings.flashcardPrompt;
-      explainPromptTextarea.value = defaultSettings.explainPrompt;
-      languagePromptTextarea.value = defaultSettings.languagePrompt;
-      autoPopupCheckbox.checked = defaultSettings.autoPopup;
-      translationLanguageSelect.value = defaultSettings.translationLanguage;
-      targetLanguageSelect.value = defaultSettings.targetLanguage;
+      apiKeyInput.value = '';
+      modelSelect.value = 'claude-3-5-sonnet-20240620';
+      flashcardPromptTextarea.value = defaultFlashcardPrompt.trim();
+      explainPromptTextarea.value = defaultExplainPrompt.trim();
+      languagePromptTextarea.value = defaultLanguagePrompt.trim();
+      autoPopupCheckbox.checked = true;
+      translationLanguageSelect.value = 'Vietnamese';
+      targetLanguageSelect.value = 'English';
 
-      // Save default settings to storage
-      chrome.storage.sync.set(defaultSettings, () => {
-        alert('Settings have been reset to default values.');
-      });
+      // Trigger the form submission to save these values
+      document.getElementById('settings-form').dispatchEvent(new Event('submit'));
     });
   }
 }
