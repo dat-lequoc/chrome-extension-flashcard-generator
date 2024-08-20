@@ -13,29 +13,43 @@ async function generateFlashcards(text, mode, sendResponse) {
     }
 
     const prompt = generatePrompt(text, mode, settings);
+    console.log('Sending request with prompt:', prompt);
+
+    const requestBody = {
+      model: settings.model,
+      max_tokens: 1024,
+      messages: [{ role: 'user', content: prompt }]
+    };
+    console.log('Request body:', JSON.stringify(requestBody));
+
     const response = await fetch('https://api.anthropic.com/v1/messages', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
-        'x-api-key': settings.apiKey
+        'x-api-key': settings.apiKey,
+        'anthropic-version': '2023-06-01'
       },
-      body: JSON.stringify({
-        model: settings.model,
-        max_tokens: 1024,
-        messages: [{ role: 'user', content: prompt }]
-      })
+      body: JSON.stringify(requestBody)
     });
 
     if (!response.ok) {
-      throw new Error(`API request failed: ${response.status} ${response.statusText}`);
+      const errorText = await response.text();
+      console.error('API response:', response.status, response.statusText, errorText);
+      throw new Error(`API request failed: ${response.status} ${response.statusText}. ${errorText}`);
     }
 
     const data = await response.json();
+    console.log('API response data:', data);
+
+    if (!data.content || !data.content[0] || !data.content[0].text) {
+      throw new Error('Unexpected API response format');
+    }
+
     const content = data.content[0].text;
     const flashcards = parseFlashcards(content, mode);
     sendResponse({ success: true, flashcards });
   } catch (error) {
-    console.error('Error:', error);
+    console.error('Error in generateFlashcards:', error);
     sendResponse({ success: false, error: error.message });
   }
 }
