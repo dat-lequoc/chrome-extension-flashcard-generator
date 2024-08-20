@@ -157,12 +157,14 @@ function generateFlashcards() {
 function speakWord(word) {
   const utterance = new SpeechSynthesisUtterance(word);
   const voices = window.speechSynthesis.getVoices();
-  const selectedLanguage = document.querySelector('.language-btn.selected').dataset.language;
   
-  const languageVoice = voices.find(voice => voice.lang.startsWith(selectedLanguage.toLowerCase().slice(0, 2)));
-  if (languageVoice) utterance.voice = languageVoice;
-  
-  window.speechSynthesis.speak(utterance);
+  chrome.storage.sync.get('targetLanguage', (result) => {
+    const targetLanguage = result.targetLanguage || 'English';
+    const languageVoice = voices.find(voice => voice.lang.startsWith(targetLanguage.toLowerCase().slice(0, 2)));
+    if (languageVoice) utterance.voice = languageVoice;
+    
+    window.speechSynthesis.speak(utterance);
+  });
 }
 
 function saveFlashcard(flashcard) {
