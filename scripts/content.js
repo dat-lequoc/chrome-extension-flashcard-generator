@@ -433,18 +433,18 @@ function updateUIForMode(mode) {
     generateBtn.style.display = 'none';
     languageButtons.style.display = 'flex';
     languageButtons.style.pointerEvents = 'auto';
-    // Ensure a language is selected
-    const selectedLanguageBtn = languageButtons.querySelector('.selected');
-    if (!selectedLanguageBtn) {
-      const defaultLanguageBtn = languageButtons.querySelector('[data-language="English"]');
-      if (defaultLanguageBtn) {
-        defaultLanguageBtn.classList.add('selected');
-      }
-    }
   } else {
     generateBtn.style.display = 'block';
     languageButtons.style.display = 'none';
-    languageButtons.style.pointerEvents = 'none';
+  }
+
+  // Ensure a language is selected
+  const selectedLanguageBtn = languageButtons.querySelector('.selected');
+  if (!selectedLanguageBtn && mode === 'language') {
+    const defaultLanguageBtn = languageButtons.querySelector('[data-language="English"]');
+    if (defaultLanguageBtn) {
+      defaultLanguageBtn.classList.add('selected');
+    }
   }
 }
 
@@ -455,8 +455,7 @@ function addLanguageButtonListeners() {
       const languageButtons = languageButtonsContainer.querySelectorAll('.language-btn');
       languageButtons.forEach(btn => btn.classList.remove('selected'));
       e.target.classList.add('selected');
-      // Update the mode when a language button is clicked
-      mode = 'language';
+      // Don't change the mode, just update UI
       updateUIForMode(mode);
     }
   });
