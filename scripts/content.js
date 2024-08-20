@@ -189,12 +189,6 @@ function exportFlashcardsCSV() {
   document.body.removeChild(link);
 }
 
-let flashcardCollections = {
-  flashcard: [],
-  explain: [],
-  language: []
-};
-
 function displayFlashcards(flashcards, mode) {
   if (!flashcardContainer) {
     console.error('Flashcard container not found');
@@ -222,6 +216,7 @@ function displayFlashcards(flashcards, mode) {
     removeBtn.textContent = 'Remove';
     removeBtn.addEventListener('click', function() {
       flashcardElement.remove();
+      updateCollection();
     });
     flashcardElement.appendChild(removeBtn);
     
@@ -234,60 +229,100 @@ function displayFlashcards(flashcards, mode) {
 function addToCollection() {
   const currentMode = document.querySelector('.mode-btn.selected').dataset.mode;
   const flashcards = Array.from(document.querySelectorAll(`.flashcard[data-mode="${currentMode}"]`));
-  flashcardCollections[currentMode] = flashcardCollections[currentMode].concat(flashcards.map(fc => {
+  const newFlashcards = flashcards.map(fc => {
     return {
       question: fc.querySelector('.question')?.textContent || fc.querySelector('.word')?.textContent,
       answer: fc.querySelector('.answer')?.textContent || fc.querySelector('.meaning')?.textContent
     };
-  }));
-  updateCollectionButtons();
+  });
+  
+  chrome.runtime.sendMessage({
+    action: 'updateCollection',
+    mode: currentMode,
+    flashcards: newFlashcards
+  }, () => {
+    updateCollectionButtons();
+  });
 }
 
 function clearCollection() {
   const currentMode = document.querySelector('.mode-btn.selected').dataset.mode;
   if (confirm(`Are you sure you want to clear the ${currentMode} collection?`)) {
-    flashcardCollections[currentMode] = [];
-    updateCollectionButtons();
+    chrome.runtime.sendMessage({
+      action: 'clearCollection',
+      mode: currentMode
+    }, () => {
+      updateCollectionButtons();
+    });
   }
 }
 
 function exportCSV() {
   const currentMode = document.querySelector('.mode-btn.selected').dataset.mode;
-  const collection = flashcardCollections[currentMode];
-  let csvContent = "data:text/csv;charset=utf-8,";
+  chrome.runtime.sendMessage({
+    action: 'getCollection',
+    mode: currentMode
+  }, response => {
+    const collection = response.collection;
+    let csvContent = "data:text/csv;charset=utf-8,";
 
-  if (currentMode === 'language') {
-    csvContent += "Word/Phrase,Translation,Example,Meaning\n";
-    collection.forEach(flashcard => {
-      const word = flashcard.question.split(':')[0].trim();
-      const translation = flashcard.question.split(':')[1].trim();
-      const example = flashcard.answer.split('\n')[0].trim();
-      const meaning = flashcard.answer.split('\n')[1].trim();
-      csvContent += `"${word}","${translation}","${example}","${meaning}"\n`;
-    });
-  } else {
-    csvContent += "Question,Answer\n";
-    collection.forEach(flashcard => {
-      const question = flashcard.question.replace(/^Q:\s*/, '').replace(/"/g, '""');
-      const answer = flashcard.answer.replace(/^A:\s*/, '').replace(/"/g, '""');
-      csvContent += `"${question}","${answer}"\n`;
-    });
-  }
+    if (currentMode === 'language') {
+      csvContent += "Word/Phrase,Translation,Example,Meaning\n";
+      collection.forEach(flashcard => {
+        const word = flashcard.question.split(':')[0].trim();
+        const translation = flashcard.question.split(':')[1].trim();
+        const example = flashcard.answer.split('\n')[0].trim();
+        const meaning = flashcard.answer.split('\n')[1].trim();
+        csvContent += `"${word}","${translation}","${example}","${meaning}"\n`;
+      });
+    } else {
+      csvContent += "Question,Answer\n";
+      collection.forEach(flashcard => {
+        const question = flashcard.question.replace(/^Q:\s*/, '').replace(/"/g, '""');
+        const answer = flashcard.answer.replace(/^A:\s*/, '').replace(/"/g, '""');
+        csvContent += `"${question}","${answer}"\n`;
+      });
+    }
 
-  const encodedUri = encodeURI(csvContent);
-  const link = document.createElement("a");
-  link.setAttribute("href", encodedUri);
-  link.setAttribute("download", `${currentMode}_flashcards.csv`);
-  document.body.appendChild(link);
-  link.click();
-  document.body.removeChild(link);
+    const encodedUri = encodeURI(csvContent);
+    const link = document.createElement("a");
+    link.setAttribute("href", encodedUri);
+    link.setAttribute("download", `${currentMode}_flashcards.csv`);
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+  });
 }
 
 function updateCollectionButtons() {
   const currentMode = document.querySelector('.mode-btn.selected').dataset.mode;
-  const collectionCount = flashcardCollections[currentMode].length;
-  document.getElementById('add-to-collection-btn').textContent = `Add to Collection (${collectionCount})`;
-  document.getElementById('export-csv-btn').style.display = collectionCount > 0 ? 'block' : 'none';
+  chrome.runtime.sendMessage({
+    action: 'getCollection',
+    mode: currentMode
+  }, response => {
+    const collectionCount = response.collection.length;
+    document.getElementById('add-to-collection-btn').textContent = `Add to Collection (${collectionCount})`;
+    document.getElementById('export-csv-btn').style.display = collectionCount > 0 ? 'block' : 'none';
+  });
+}
+
+function updateCollection() {
+  const currentMode = document.querySelector('.mode-btn.selected').dataset.mode;
+  const flashcards = Array.from(document.querySelectorAll(`.flashcard[data-mode="${currentMode}"]`));
+  const newFlashcards = flashcards.map(fc => {
+    return {
+      question: fc.querySelector('.question')?.textContent || fc.querySelector('.word')?.textContent,
+      answer: fc.querySelector('.answer')?.textContent || fc.querySelector('.meaning')?.textContent
+    };
+  });
+  
+  chrome.runtime.sendMessage({
+    action: 'updateCollection',
+    mode: currentMode,
+    flashcards: newFlashcards
+  }, () => {
+    updateCollectionButtons();
+  });
 }
 
 // Add event listeners for the new buttons

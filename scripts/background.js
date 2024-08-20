@@ -1,9 +1,37 @@
+let flashcardCollections = {
+  flashcard: [],
+  explain: [],
+  language: []
+};
+
 chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
   if (request.action === 'generateFlashcards') {
     generateFlashcards(request.text, request.mode, sendResponse);
     return true;  // Indicates we will send a response asynchronously
+  } else if (request.action === 'updateCollection') {
+    updateCollection(request.mode, request.flashcards);
+    sendResponse({success: true});
+  } else if (request.action === 'getCollection') {
+    sendResponse({collection: flashcardCollections[request.mode]});
+  } else if (request.action === 'clearCollection') {
+    clearCollection(request.mode);
+    sendResponse({success: true});
   }
 });
+
+function updateCollection(mode, flashcards) {
+  flashcardCollections[mode] = flashcards;
+  chrome.storage.sync.set({flashcardCollections}, () => {
+    console.log('Collection updated and saved');
+  });
+}
+
+function clearCollection(mode) {
+  flashcardCollections[mode] = [];
+  chrome.storage.sync.set({flashcardCollections}, () => {
+    console.log('Collection cleared and saved');
+  });
+}
 
 async function generateFlashcards(text, mode, sendResponse) {
   try {
@@ -119,4 +147,11 @@ async function getSettings() {
 
 chrome.runtime.onInstalled.addListener(() => {
   chrome.runtime.openOptionsPage();
+});
+
+// Load flashcard collections from storage when the extension starts
+chrome.storage.sync.get('flashcardCollections', (result) => {
+  if (result.flashcardCollections) {
+    flashcardCollections = result.flashcardCollections;
+  }
 });
