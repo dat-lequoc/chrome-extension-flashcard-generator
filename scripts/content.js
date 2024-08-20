@@ -81,16 +81,13 @@ function createPanel() {
     });
   });
 
-  // Create a single button for the target language
-  chrome.storage.sync.get(['targetLanguage'], function(result) {
-    const languageButtons = document.getElementById('language-buttons');
-    const button = document.createElement('button');
-    button.className = 'mode-btn language-btn selected';
-    button.dataset.language = result.targetLanguage || 'Target Language';
-    button.textContent = result.targetLanguage || 'Target Language';
-    button.style.cssText = 'font-size: 14px; padding: 5px 10px; cursor: pointer; margin-right: 5px;';
-    languageButtons.appendChild(button);
-  });
+  // Create a guide for Language mode
+  const languageButtons = document.getElementById('language-buttons');
+  const guide = document.createElement('p');
+  guide.id = 'language-mode-guide';
+  guide.textContent = 'Double-click on a word to translate';
+  guide.style.cssText = 'font-size: 14px; margin: 10px 0; text-align: center;';
+  languageButtons.appendChild(guide);
 }
 
 function showPanel() {
@@ -432,50 +429,21 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
 // Add event listeners for language buttons
 function updateUIForMode(mode) {
   const generateBtn = document.getElementById('generate-btn');
-  const languageButtons = document.getElementById('language-buttons');
+  const languageModeGuide = document.getElementById('language-mode-guide');
   
   if (mode === 'language') {
     generateBtn.style.display = 'none';
-    languageButtons.style.display = 'flex';
-    languageButtons.style.pointerEvents = 'auto';
+    languageModeGuide.style.display = 'block';
   } else {
     generateBtn.style.display = 'block';
-    languageButtons.style.display = 'none';
+    languageModeGuide.style.display = 'none';
   }
-
-  // Ensure a language is selected
-  const selectedLanguageBtn = languageButtons.querySelector('.selected');
-  if (!selectedLanguageBtn && mode === 'language') {
-    const defaultLanguageBtn = languageButtons.querySelector('[data-language="English"]');
-    if (defaultLanguageBtn) {
-      defaultLanguageBtn.classList.add('selected');
-    }
-  }
-}
-
-function addLanguageButtonListeners() {
-  const languageButtonsContainer = document.getElementById('language-buttons');
-  languageButtonsContainer.addEventListener('click', (e) => {
-    if (e.target.classList.contains('language-btn')) {
-      const languageButtons = languageButtonsContainer.querySelectorAll('.language-btn');
-      languageButtons.forEach(btn => btn.classList.remove('selected'));
-      e.target.classList.add('selected');
-      // Don't change the mode, just update UI
-      updateUIForMode(mode);
-    }
-  });
 }
 
 // Call this function after creating the panel
 function initializePanel() {
   createPanel();
   addEventListeners();
-  addLanguageButtonListeners();
-  // Set English as default language
-  const englishButton = document.querySelector('.language-btn[data-language="English"]');
-  if (englishButton) {
-    englishButton.classList.add('selected');
-  }
 }
 
 // Initial setup
