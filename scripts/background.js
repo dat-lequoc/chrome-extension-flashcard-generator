@@ -83,6 +83,7 @@ async function generateFlashcards(text, mode, sendResponse, context = '') {
 }
 
 function generatePrompt(text, mode, settings, context = '') {
+  console.log("genP", text, mode);
   switch (mode) {
     case 'flashcard':
       return settings.flashcardPrompt.replace('{{TEXT}}', text);
