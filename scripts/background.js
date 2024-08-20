@@ -78,7 +78,7 @@ async function generateFlashcards(text, mode, sendResponse, context = '') {
 
     const content = data.content[0].text;
     console.log('Parsed content:', content);
-    const flashcards = parseFlashcards(content, mode);
+    const flashcards = parseFlashcards(content, mode, text);
     console.log('Generated flashcards:', flashcards);
     sendResponse({ success: true, flashcards });
   } catch (error) {
@@ -106,7 +106,7 @@ function generatePrompt(text, mode, settings, context = '') {
   }
 }
 
-function parseFlashcards(content, mode) {
+function parseFlashcards(content, mode, text) {
   const flashcards = [];
   const regex = /<T>(.*?)<\/T>|<Q>(.*?)<\/Q>|<A>(.*?)<\/A>/gs;
   let matches;
