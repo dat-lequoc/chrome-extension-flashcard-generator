@@ -138,7 +138,7 @@ function generateFlashcards() {
     return;
   }
   
-  showLoadingIndicator();
+  showGeneratingNotification();
   
   let context = '';
   if (mode === 'language') {
@@ -153,13 +153,41 @@ function generateFlashcards() {
     mode: mode,
     context: context
   }, response => {
-    hideLoadingIndicator();
+    hideGeneratingNotification();
     if (response.success) {
       displayFlashcards(response.flashcards, mode);
     } else {
       alert('Error: ' + response.error);
     }
   });
+}
+
+function showGeneratingNotification() {
+  const notification = document.createElement('div');
+  notification.id = 'generating-notification';
+  notification.textContent = 'Generating...';
+  notification.style.cssText = `
+    position: fixed;
+    top: 20px;
+    left: 50%;
+    transform: translateX(-50%);
+    background-color: #4CAF50;
+    color: white;
+    padding: 10px 20px;
+    border-radius: 5px;
+    z-index: 10001;
+  `;
+  document.body.appendChild(notification);
+  setTimeout(() => {
+    hideGeneratingNotification();
+  }, 2000);
+}
+
+function hideGeneratingNotification() {
+  const notification = document.getElementById('generating-notification');
+  if (notification) {
+    notification.remove();
+  }
 }
 
 function speakWord(word) {
