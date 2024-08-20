@@ -571,14 +571,11 @@ function handleLanguageModeSelection(event) {
     range.deleteContents();
     range.insertNode(span);
 
-    const selectedLanguageButton = document.querySelector('#language-buttons .mode-btn.selected');
-    if (selectedLanguageButton) {
-      const targetLanguage = selectedLanguageButton.dataset.language;
+    chrome.storage.sync.get('targetLanguage', (result) => {
+      const targetLanguage = result.targetLanguage || 'English';
       const phrase = getPhrase(range, word);
       generateLanguageFlashcard(word, phrase, targetLanguage);
-    } else {
-      console.error('No language selected');
-    }
+    });
   }
 }
 
