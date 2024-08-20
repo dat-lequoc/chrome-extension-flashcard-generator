@@ -1,6 +1,7 @@
 let panel, flashcardContainer, pageContainer;
 const PANEL_WIDTH = '30%';
 let savedFlashcards = [];
+let mode = 'flashcard'; // Define mode variable globally
 
 function createPanel() {
   if (panel) return; // Prevent creating multiple panels
@@ -65,6 +66,7 @@ function createPanel() {
     button.addEventListener('click', () => {
       modeButtons.forEach(btn => btn.classList.remove('selected'));
       button.classList.add('selected');
+      mode = button.dataset.mode; // Update mode when a button is clicked
     });
   });
 }
