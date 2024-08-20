@@ -89,6 +89,7 @@ async function generateFlashcards(text, mode, sendResponse, context = '') {
 
 function generatePrompt(text, mode, settings, context = '') {
   console.log("genP", text, mode);
+  console.log(settings);
   switch (mode) {
     case 'flashcard':
       return settings.flashcardPrompt.replace('{{TEXT}}', text);
@@ -99,7 +100,7 @@ function generatePrompt(text, mode, settings, context = '') {
         .replace('{{WORD}}', text)
         .replace('{{PHRASE}}', context)
         .replace('{{TRANSLATION_LANGUAGE}}', settings.translationLanguage)
-        .replace('{{TARGET_LANGUAGE2}}', settings.targetLanguage);
+        .replace('{{TARGET_LANGUAGE}}', settings.targetLanguage);
     default:
       return `Summarize the key points of the following text:\n\n${text}`;
   }
