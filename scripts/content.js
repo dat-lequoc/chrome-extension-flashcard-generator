@@ -254,14 +254,26 @@ function clearCollection() {
 function exportCSV() {
   const currentMode = document.querySelector('.mode-btn.selected').dataset.mode;
   const collection = flashcardCollections[currentMode];
-  let csvContent = "data:text/csv;charset=utf-8,Question,Answer\n";
-  
-  collection.forEach(flashcard => {
-    let question = flashcard.question.replace(/"/g, '""');
-    let answer = flashcard.answer.replace(/"/g, '""');
-    csvContent += `"${question}","${answer}"\n`;
-  });
-  
+  let csvContent = "data:text/csv;charset=utf-8,";
+
+  if (currentMode === 'language') {
+    csvContent += "Word/Phrase,Translation,Example,Meaning\n";
+    collection.forEach(flashcard => {
+      const word = flashcard.question.split(':')[0].trim();
+      const translation = flashcard.question.split(':')[1].trim();
+      const example = flashcard.answer.split('\n')[0].trim();
+      const meaning = flashcard.answer.split('\n')[1].trim();
+      csvContent += `"${word}","${translation}","${example}","${meaning}"\n`;
+    });
+  } else {
+    csvContent += "Question,Answer\n";
+    collection.forEach(flashcard => {
+      const question = flashcard.question.replace(/^Q:\s*/, '').replace(/"/g, '""');
+      const answer = flashcard.answer.replace(/^A:\s*/, '').replace(/"/g, '""');
+      csvContent += `"${question}","${answer}"\n`;
+    });
+  }
+
   const encodedUri = encodeURI(csvContent);
   const link = document.createElement("a");
   link.setAttribute("href", encodedUri);
