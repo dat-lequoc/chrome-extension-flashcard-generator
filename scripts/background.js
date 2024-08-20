@@ -145,7 +145,7 @@ function parseFlashcards(content, mode) {
 
 async function getSettings() {
   return new Promise((resolve) => {
-    chrome.storage.sync.get(['apiKey', 'model'], async (result) => {
+    chrome.storage.sync.get(['apiKey', 'model', 'translationLanguage', 'targetLanguage'], async (result) => {
       const [flashcardPrompt, explainPrompt, languagePrompt] = await Promise.all([
         fetch(chrome.runtime.getURL('prompts/flashcard_prompt.txt')).then(response => response.text()),
         fetch(chrome.runtime.getURL('prompts/explain_prompt.txt')).then(response => response.text()),
@@ -157,7 +157,9 @@ async function getSettings() {
         model: result.model || 'claude-3-5-sonnet-20240620',
         flashcardPrompt: flashcardPrompt.trim(),
         explainPrompt: explainPrompt.trim(),
-        languagePrompt: languagePrompt.trim()
+        languagePrompt: languagePrompt.trim(),
+        translationLanguage: result.translationLanguage || 'Vietnamese',
+        targetLanguage: result.targetLanguage || 'English'
       });
     });
   });
