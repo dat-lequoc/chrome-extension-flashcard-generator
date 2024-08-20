@@ -395,10 +395,14 @@ document.addEventListener('mouseup', (e) => {
   } else {
     const selectedText = getSelectedText();
     if (selectedText) {
-      if (!panel) {
-        createPanel();
-      }
-      showPanel();
+      chrome.storage.sync.get('autoPopup', (result) => {
+        if (result.autoPopup !== false) {
+          if (!panel) {
+            createPanel();
+          }
+          showPanel();
+        }
+      });
     }
   }
 });

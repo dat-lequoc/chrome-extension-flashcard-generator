@@ -5,14 +5,16 @@ document.addEventListener('DOMContentLoaded', () => {
   const flashcardPromptTextarea = document.getElementById('flashcard-prompt');
   const explainPromptTextarea = document.getElementById('explain-prompt');
   const languagePromptTextarea = document.getElementById('language-prompt');
+  const autoPopupCheckbox = document.getElementById('auto-popup');
 
   // Load saved settings
-  chrome.storage.sync.get(['apiKey', 'model', 'flashcardPrompt', 'explainPrompt', 'languagePrompt'], (result) => {
+  chrome.storage.sync.get(['apiKey', 'model', 'flashcardPrompt', 'explainPrompt', 'languagePrompt', 'autoPopup'], (result) => {
     apiKeyInput.value = result.apiKey || '';
     modelSelect.value = result.model || 'claude-3-5-sonnet-20240620';
     flashcardPromptTextarea.value = result.flashcardPrompt || 'Generate concise flashcards based on the following text. Create 3-5 flashcards, each with a question (Q:) and an answer (A:). The questions should test key concepts, and the answers should be brief but complete.';
     explainPromptTextarea.value = result.explainPrompt || 'Explain the following text in simple terms, focusing on the main concepts and their relationships. Use clear and concise language, and break down complex ideas into easily understandable parts.';
     languagePromptTextarea.value = result.languagePrompt || 'For the following text, identify key terms or phrases and provide their definitions and usage examples. Format each entry as follows:\nWord: [term]\nTranslation: [brief translation or equivalent]\nExample: [example sentence using the term]\nMeaning: [concise explanation]';
+    autoPopupCheckbox.checked = result.autoPopup !== false;
   });
 
   // Save settings
@@ -23,7 +25,8 @@ document.addEventListener('DOMContentLoaded', () => {
       model: modelSelect.value,
       flashcardPrompt: flashcardPromptTextarea.value,
       explainPrompt: explainPromptTextarea.value,
-      languagePrompt: languagePromptTextarea.value
+      languagePrompt: languagePromptTextarea.value,
+      autoPopup: autoPopupCheckbox.checked
     }, () => {
       alert('Settings saved successfully!');
     });

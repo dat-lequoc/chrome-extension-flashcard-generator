@@ -149,6 +149,10 @@ chrome.runtime.onInstalled.addListener(() => {
   chrome.runtime.openOptionsPage();
 });
 
+chrome.action.onClicked.addListener((tab) => {
+  chrome.tabs.sendMessage(tab.id, { action: "showPanel" });
+});
+
 // Load flashcard collections from storage when the extension starts
 chrome.storage.sync.get('flashcardCollections', (result) => {
   if (result.flashcardCollections) {
