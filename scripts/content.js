@@ -80,6 +80,7 @@ function createPanel() {
       modeButtons.forEach(btn => btn.classList.remove('selected'));
       button.classList.add('selected');
       mode = button.dataset.mode; // Update mode when a button is clicked
+      updateUIForMode(mode);
       updateCollectionButtons();
     });
   });
@@ -126,14 +127,11 @@ function generateFlashcards() {
   
   const mode = document.querySelector('.mode-btn.selected').dataset.mode;
   
+  updateUIForMode(mode);
+  
   if (mode === 'language') {
-    document.getElementById('generate-btn').style.display = 'none';
-    document.getElementById('language-buttons').style.display = 'flex';
     showLanguageModeInstruction();
     return;
-  } else {
-    document.getElementById('generate-btn').style.display = 'block';
-    document.getElementById('language-buttons').style.display = 'none';
   }
   
   showLoadingIndicator();
@@ -379,6 +377,19 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
 });
 
 // Add event listeners for language buttons
+function updateUIForMode(mode) {
+  const generateBtn = document.getElementById('generate-btn');
+  const languageButtons = document.getElementById('language-buttons');
+  
+  if (mode === 'language') {
+    generateBtn.style.display = 'none';
+    languageButtons.style.display = 'flex';
+  } else {
+    generateBtn.style.display = 'block';
+    languageButtons.style.display = 'none';
+  }
+}
+
 function addLanguageButtonListeners() {
   const languageButtons = document.querySelectorAll('.language-btn');
   languageButtons.forEach(button => {
