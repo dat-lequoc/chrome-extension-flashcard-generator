@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Web Flashcard Generator Settings</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      max-width: 800px;
+      margin: 0 auto;
+      padding: 20px;
+    }
+    label {
+      display: block;
+      margin-top: 10px;
+    }
+    input[type="text"], select, textarea {
+      width: 100%;
+      padding: 5px;
+      margin-top: 5px;
+    }
+    button {
+      margin-top: 20px;
+      padding: 10px;
+    }
+  </style>
+</head>
+<body>
+  <h1>Web Flashcard Generator Settings</h1>
+  <form id="settings-form">
+    <label for="api-key">Claude API Key:</label>
+    <input type="text" id="api-key" required>
+
+    <label for="model-select">Model:</label>
+    <select id="model-select">
+      <option value="claude-3-5-sonnet-20240620">Claude 3.5 Sonnet</option>
+      <option value="claude-3-haiku-20240307">Claude 3 Haiku</option>
+    </select>
+
+    <label for="system-prompt">System Prompt for Flashcard Generation:</label>
+    <textarea id="system-prompt" rows="5"></textarea>
+
+    <button type="submit">Save Settings</button>
+  </form>
+
+  <script src="settings.js"></script>
+</body>
+</html>

@@ -7,20 +7,20 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
 
 async function generateFlashcards(text, mode, sendResponse) {
   try {
-    const apiKey = await getApiKey();
-    if (!apiKey) {
+    const settings = await getSettings();
+    if (!settings.apiKey) {
       throw new Error('API key not set. Please set it in the extension options.');
     }
 
-    const prompt = generatePrompt(text, mode);
+    const prompt = generatePrompt(text, mode, settings.systemPrompt);
     const response = await fetch('https://api.anthropic.com/v1/messages', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
-        'x-api-key': apiKey
+        'x-api-key': settings.apiKey
       },
       body: JSON.stringify({
-        model: 'claude-3-5-sonnet-20240620',
+        model: settings.model,
         max_tokens: 1024,
         messages: [{ role: 'user', content: prompt }]
       })
@@ -40,10 +40,10 @@ async function generateFlashcards(text, mode, sendResponse) {
   }
 }
 
-function generatePrompt(text, mode) {
+function generatePrompt(text, mode, systemPrompt) {
   switch (mode) {
     case 'flashcard':
-      return `Generate concise flashcards based on the following text. Create 3-5 flashcards, each with a question (Q:) and an answer (A:). The questions should test key concepts, and the answers should be brief but complete.\n\nText: ${text}`;
+      return `${systemPrompt}\n\nText: ${text}`;
     case 'explain':
       return `Explain the following text in simple terms, focusing on the main concepts. Use clear and concise language, and break down complex ideas into easily understandable parts.\n\nText: ${text}`;
     case 'language':
@@ -85,10 +85,18 @@ function parseFlashcards(content, mode) {
   }
 }
 
-async function getApiKey() {
+async function getSettings() {
   return new Promise(resolve => {
-    chrome.storage.sync.get('apiKey', result => {
-      resolve(result.apiKey);
+    chrome.storage.sync.get(['apiKey', 'model', 'systemPrompt'], result => {
+      resolve({
+        apiKey: result.apiKey,
+        model: result.model || 'claude-3-5-sonnet-20240620',
+        systemPrompt: result.systemPrompt || 'Generate concise flashcards based on the following text. Create 3-5 flashcards, each with a question (Q:) and an answer (A:). The questions should test key concepts, and the answers should be brief but complete.'
+      });
     });
   });
 }
+
+chrome.runtime.onInstalled.addListener(() => {
+  chrome.runtime.openOptionsPage();
+});
