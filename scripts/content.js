@@ -1,6 +1,8 @@
 let panel, flashcardContainer;
 
 function createPanel() {
+  if (panel) return; // Prevent creating multiple panels
+
   panel = document.createElement('div');
   panel.id = 'flashcard-panel';
   panel.innerHTML = `
@@ -69,6 +71,10 @@ function generateFlashcards() {
 }
 
 function displayFlashcards(flashcards, mode) {
+  if (!flashcardContainer) {
+    console.error('Flashcard container not found');
+    return;
+  }
   flashcardContainer.innerHTML = '';
   flashcards.forEach(flashcard => {
     const flashcardElement = document.createElement('div');
@@ -97,4 +103,10 @@ document.addEventListener('mouseup', () => {
 });
 
 // Initial setup
-createPanel();
+document.addEventListener('DOMContentLoaded', () => {
+  try {
+    createPanel();
+  } catch (error) {
+    console.error('Error initializing Flashcard Generator:', error);
+  }
+});
