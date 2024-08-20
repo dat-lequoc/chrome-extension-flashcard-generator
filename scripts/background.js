@@ -97,6 +97,7 @@ function generatePrompt(text, mode, settings) {
 
 function parseFlashcards(content, mode) {
   if (mode === 'language') {
+    console.log("parseFlashcards:", content);
     const entries = content.split('\n\n');
     return entries.map(entry => {
       const lines = entry.split('\n');
@@ -132,14 +133,20 @@ function parseFlashcards(content, mode) {
 }
 
 async function getSettings() {
-  return new Promise(resolve => {
-    chrome.storage.sync.get(['apiKey', 'model', 'flashcardPrompt', 'explainPrompt', 'languagePrompt'], result => {
+  return new Promise((resolve) => {
+    chrome.storage.sync.get(['apiKey', 'model'], async (result) => {
+      const [flashcardPrompt, explainPrompt, languagePrompt] = await Promise.all([
+        fetch(chrome.runtime.getURL('prompts/flashcard_prompt.txt')).then(response => response.text()),
+        fetch(chrome.runtime.getURL('prompts/explain_prompt.txt')).then(response => response.text()),
+        fetch(chrome.runtime.getURL('prompts/language_prompt.txt')).then(response => response.text())
+      ]);
+
       resolve({
         apiKey: result.apiKey,
         model: result.model || 'claude-3-5-sonnet-20240620',
-        flashcardPrompt: result.flashcardPrompt || 'Generate concise flashcards based on the following text. Create 3-5 flashcards, each with a question (Q:) and an answer (A:). The questions should test key concepts, and the answers should be brief but complete.',
-        explainPrompt: result.explainPrompt || 'Explain the following text in simple terms, focusing on the main concepts and their relationships. Use clear and concise language, and break down complex ideas into easily understandable parts.',
-        languagePrompt: result.languagePrompt || 'For the following text, identify key terms or phrases and provide their definitions and usage examples. Format each entry as follows:\nWord: [term]\nTranslation: [brief translation or equivalent]\nExample: [example sentence using the term]\nMeaning: [concise explanation]'
+        flashcardPrompt: flashcardPrompt.trim(),
+        explainPrompt: explainPrompt.trim(),
+        languagePrompt: languagePrompt.trim()
       });
     });
   });

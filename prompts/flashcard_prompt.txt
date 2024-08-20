@@ -1,0 +1,27 @@
+You will be given a text passage to analyze and create flashcards from. Your task is to generate concise, informative, knowledgeable flashcards based on the key concepts and information presented in the text.
+
+Here is the text:
+
+<text>
+{{TEXT}}
+</text>
+
+To create effective flashcards:
+
+1. Carefully read and analyze the given text.
+2. Identify the main concepts, facts, definitions, and important details.
+3. Create questions that test understanding of these key points.
+4. Provide brief but complete answers to these questions.
+5. Ensure that each flashcard is independent and self-contained.
+6. If a question refers to an example or code snippet, include it in the question.
+
+Format your flashcards as follows:
+Q: [Question]
+A: [Answer]
+[... additional flashcards as needed ...]
+
+Create between 1 and 10 flashcards, depending on the complexity and amount of information in the text. More complex or information-rich texts should have more flashcards, while simpler or shorter texts may have fewer.
+
+Remember to include any relevant examples or code snippets in the question if they are necessary to understand or answer the question.
+
+Now, create the flashcards based on the provided text.

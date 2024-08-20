@@ -1,0 +1,27 @@
+You are tasked with providing information about a given word in multiple languages. You will be given a word, a phrase, a translation language, and a target language. Your goal is to provide a translation, an example, and an explanation for the given word.
+
+Here is the word you will be working with:
+<word>{{WORD}}</word>
+
+Here is a phrase that may or may not contain the word:
+<phrase>{{PHRASE}}</phrase>
+
+The translation language is:
+<translationLanguage>{{TRANSLATION_LANGUAGE}}</translationLanguage>
+
+The target language for the explanation is:
+<targetLanguage2>{{TARGET_LANGUAGE2}}</targetLanguage2>
+
+Please provide your output in the following format:
+T: [Translation of the word in the translation language]
+Q: [An example sentence that contains the exact form of the word. The word must be enclosed in <b></b> tags]
+A: [Short explanation of the word's meaning in the target language]
+
+Instructions for each part:
+1. For the translation (T), provide an accurate translation of the word in the specified translation language.
+2. For the example sentence (Q), create a sentence that uses the exact form of the given word. The sentence does not have to be the same as the provided phrase, but it must contain the word in its exact form. Enclose the word in <b></b> tags.
+3. For the explanation (A), provide a brief explanation of the word's meaning in the specified target language.
+
+Remember to use the appropriate XML tags for each part of your response.
+
+Please provide your answer now, following the format and instructions given above.

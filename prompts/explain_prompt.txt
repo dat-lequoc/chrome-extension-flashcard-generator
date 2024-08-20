@@ -1,0 +1,9 @@
+Explain the following text in simple terms: 
+
+<text>
+{{TEXT}}
+</text>
+
+Focusing on the main concepts. Use clear and concise language, and break down complex ideas into easily understandable parts. If there are any technical terms, provide brief explanations for them. 
+
+Now, provide your answer in markdown format based on the provided text.
