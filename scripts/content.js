@@ -460,6 +460,61 @@ function showLanguageModeInstruction() {
   }, 5000);
 }
 
+function getPhrase(range, word) {
+  const sentenceStart = /[.!?]\s+[A-Z]|^[A-Z]/;
+  const sentenceEnd = /[.!?](?=\s|$)/;
+
+  let startNode = range.startContainer;
+  let endNode = range.endContainer;
+  let startOffset = Math.max(0, range.startOffset - 50);
+  let endOffset = Math.min(endNode.length, range.endOffset + 50);
+
+  // Expand to sentence boundaries
+  while (startNode && startNode.textContent && !sentenceStart.test(startNode.textContent.slice(0, startOffset))) {
+    if (startNode.previousSibling) {
+      startNode = startNode.previousSibling;
+      startOffset = startNode.textContent ? startNode.textContent.length : 0;
+    } else if (startNode.parentNode && startNode.parentNode.previousSibling) {
+      startNode = startNode.parentNode.previousSibling.lastChild;
+      startOffset = startNode && startNode.textContent ? startNode.textContent.length : 0;
+    } else {
+      break;
+    }
+  }
+
+  while (endNode && endNode.textContent && !sentenceEnd.test(endNode.textContent.slice(endOffset))) {
+    if (endNode.nextSibling) {
+      endNode = endNode.nextSibling;
+      endOffset = 0;
+    } else if (endNode.parentNode && endNode.parentNode.nextSibling) {
+      endNode = endNode.parentNode.nextSibling.firstChild;
+      endOffset = 0;
+    } else {
+      break;
+    }
+  }
+
+  // Extract the phrase
+  let phrase = '';
+  let currentNode = startNode;
+  while (currentNode) {
+    if (currentNode.nodeType === Node.TEXT_NODE) {
+      const text = currentNode.textContent;
+      const start = currentNode === startNode ? startOffset : 0;
+      const end = currentNode === endNode ? endOffset : text.length;
+      phrase += text.slice(start, end);
+    }
+    if (currentNode === endNode) break;
+    currentNode = currentNode.nextSibling;
+  }
+
+  // Ensure the word is bolded in the phrase
+  const wordRegex = new RegExp(`\\b${word}\\b`, 'gi');
+  phrase = phrase.replace(wordRegex, `<b>$&</b>`);
+
+  return phrase.trim();
+}
+
 function handleLanguageModeSelection(event) {
   if (mode !== 'language') return;
 
