@@ -166,15 +166,22 @@ function displayFlashcards(flashcards, mode) {
     flashcardElement.className = 'flashcard';
     if (mode === 'language') {
       flashcardElement.innerHTML = `
-        <div style="font-size: 1.2em; margin-bottom: 10px;"><b>${flashcard.word}</b>: ${flashcard.translation}</div>
-        <div>- ${flashcard.answer}</div>
+        <div class="word"><b>${flashcard.word}</b>: ${flashcard.translation}</div>
+        <div class="example">${flashcard.question}</div>
+        <div class="meaning">${flashcard.answer}</div>
       `;
     } else {
       flashcardElement.innerHTML = `
-        <strong>Q: ${flashcard.question}</strong><br>
-        A: ${flashcard.answer}
+        <div class="question"><strong>Q: ${flashcard.question}</strong></div>
+        <div class="answer">A: ${flashcard.answer}</div>
       `;
     }
+    const saveBtn = document.createElement('button');
+    saveBtn.className = 'save-flashcard';
+    saveBtn.textContent = 'Save';
+    saveBtn.addEventListener('click', () => saveFlashcard(flashcard));
+    flashcardElement.appendChild(saveBtn);
+
     const removeBtn = document.createElement('button');
     removeBtn.className = 'remove-btn';
     removeBtn.textContent = 'Remove';
@@ -182,23 +189,7 @@ function displayFlashcards(flashcards, mode) {
       flashcardElement.remove();
     });
     flashcardElement.appendChild(removeBtn);
-    flashcardContainer.appendChild(flashcardElement);
-  });
-      flashcardElement.innerHTML = `
-        <div class="word">${flashcard.word}</div>
-        <div class="translation">${flashcard.translation}</div>
-<div class="example">${flashcard.question}</div>
-        <div class="meaning">${flashcard.answer}</div>
-        <button class="save-flashcard">Save</button>
-      `;
-    } else {
-      flashcardElement.innerHTML = `
-        <div class="question">${flashcard.question}</div>
-        <div class="answer">${flashcard.answer}</div>
-        <button class="save-flashcard">Save</button>
-      `;
-    }
-    flashcardElement.querySelector('.save-flashcard').addEventListener('click', () => saveFlashcard(flashcard));
+    
     flashcardContainer.appendChild(flashcardElement);
   });
   
