@@ -61,11 +61,7 @@ function saveSettings(e) {
     }, () => {
       alert('Settings saved successfully!');
     });
-  });
-
-  // Add event listener for the reset button
-  document.getElementById('reset-defaults').addEventListener('click', resetToDefaults);
-});
+}
 
 function resetToDefaults() {
   if (confirm('Are you sure you want to reset all settings to their default values?')) {
