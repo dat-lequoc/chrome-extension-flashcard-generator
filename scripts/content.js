@@ -45,13 +45,13 @@ function createPanel() {
   panel.innerHTML = `
     <button id="close-panel" style="position: absolute; top: 5px; right: 5px; font-size: 16px;">×</button>
     <div id="mode-selector" style="margin-top: 20px;">
-      <button class="mode-btn selected" data-mode="flashcard" style="font-size: 14px; padding: 5px 10px;">Flashcard</button>
-      <button class="mode-btn" data-mode="explain" style="font-size: 14px; padding: 5px 10px;">Explain</button>
-      <button class="mode-btn" data-mode="language" style="font-size: 14px; padding: 5px 10px;">Language</button>
+      <button class="mode-btn selected" data-mode="flashcard" style="font-size: 14px; padding: 5px 10px; cursor: pointer;">Flashcard</button>
+      <button class="mode-btn" data-mode="explain" style="font-size: 14px; padding: 5px 10px; cursor: pointer;">Explain</button>
+      <button class="mode-btn" data-mode="language" style="font-size: 14px; padding: 5px 10px; cursor: pointer;">Language</button>
     </div>
     <div id="language-buttons" style="display: none; margin-top: 10px;">
-      <button class="mode-btn language-btn selected" data-language="English" style="font-size: 14px; padding: 5px 10px;">English</button>
-      <button class="mode-btn language-btn" data-language="French" style="font-size: 14px; padding: 5px 10px;">French</button>
+      <button class="mode-btn language-btn selected" data-language="English" style="font-size: 14px; padding: 5px 10px; cursor: pointer; margin-right: 5px;">English</button>
+      <button class="mode-btn language-btn" data-language="French" style="font-size: 14px; padding: 5px 10px; cursor: pointer;">French</button>
     </div>
     <div id="flashcard-container" style="font-size: 14px;"></div>
     <button id="generate-btn" style="font-size: 14px; padding: 5px 10px; margin-top: 10px;">Generate</button>
@@ -432,6 +432,7 @@ function updateUIForMode(mode) {
   if (mode === 'language') {
     generateBtn.style.display = 'none';
     languageButtons.style.display = 'flex';
+    languageButtons.style.pointerEvents = 'auto';
     // Ensure a language is selected
     const selectedLanguageBtn = languageButtons.querySelector('.selected');
     if (!selectedLanguageBtn) {
@@ -443,19 +444,21 @@ function updateUIForMode(mode) {
   } else {
     generateBtn.style.display = 'block';
     languageButtons.style.display = 'none';
+    languageButtons.style.pointerEvents = 'none';
   }
 }
 
 function addLanguageButtonListeners() {
-  const languageButtons = document.querySelectorAll('.language-btn');
-  languageButtons.forEach(button => {
-    button.addEventListener('click', () => {
+  const languageButtonsContainer = document.getElementById('language-buttons');
+  languageButtonsContainer.addEventListener('click', (e) => {
+    if (e.target.classList.contains('language-btn')) {
+      const languageButtons = languageButtonsContainer.querySelectorAll('.language-btn');
       languageButtons.forEach(btn => btn.classList.remove('selected'));
-      button.classList.add('selected');
+      e.target.classList.add('selected');
       // Update the mode when a language button is clicked
       mode = 'language';
       updateUIForMode(mode);
-    });
+    }
   });
 }
 
