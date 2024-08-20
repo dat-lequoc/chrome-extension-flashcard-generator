@@ -42,9 +42,8 @@ async function generateFlashcards(text, mode, sendResponse) {
 
     let context = '';
     if (mode === 'language') {
-      // Assuming we have access to the getPhrase function here
-      // If not, we might need to pass it from the content script
-      context = getPhrase(text);
+      // The context is now passed from the content script
+      context = request.context || '';
     }
 
     const prompt = generatePrompt(text, mode, settings, context);
