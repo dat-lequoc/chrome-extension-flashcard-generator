@@ -6,15 +6,17 @@ document.addEventListener('DOMContentLoaded', () => {
   const explainPromptTextarea = document.getElementById('explain-prompt');
   const languagePromptTextarea = document.getElementById('language-prompt');
   const autoPopupCheckbox = document.getElementById('auto-popup');
+  const targetLanguageInput = document.getElementById('target-language');
 
   // Load saved settings
-  chrome.storage.sync.get(['apiKey', 'model', 'flashcardPrompt', 'explainPrompt', 'languagePrompt', 'autoPopup'], (result) => {
+  chrome.storage.sync.get(['apiKey', 'model', 'flashcardPrompt', 'explainPrompt', 'languagePrompt', 'autoPopup', 'targetLanguage'], (result) => {
     apiKeyInput.value = result.apiKey || '';
     modelSelect.value = result.model || 'claude-3-5-sonnet-20240620';
     flashcardPromptTextarea.value = result.flashcardPrompt || 'Generate concise flashcards based on the following text. Create 3-5 flashcards, each with a question (Q:) and an answer (A:). The questions should test key concepts, and the answers should be brief but complete.';
     explainPromptTextarea.value = result.explainPrompt || 'Explain the following text in simple terms, focusing on the main concepts and their relationships. Use clear and concise language, and break down complex ideas into easily understandable parts.';
     languagePromptTextarea.value = result.languagePrompt || 'For the following text, identify key terms or phrases and provide their definitions and usage examples. Format each entry as follows:\nWord: [term]\nTranslation: [brief translation or equivalent]\nExample: [example sentence using the term]\nMeaning: [concise explanation]';
     autoPopupCheckbox.checked = result.autoPopup !== false;
+    targetLanguageInput.value = result.targetLanguage || '';
   });
 
   // Save settings
@@ -26,7 +28,8 @@ document.addEventListener('DOMContentLoaded', () => {
       flashcardPrompt: flashcardPromptTextarea.value,
       explainPrompt: explainPromptTextarea.value,
       languagePrompt: languagePromptTextarea.value,
-      autoPopup: autoPopupCheckbox.checked
+      autoPopup: autoPopupCheckbox.checked,
+      targetLanguage: targetLanguageInput.value
     }, () => {
       alert('Settings saved successfully!');
     });

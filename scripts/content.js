@@ -81,21 +81,15 @@ function createPanel() {
     });
   });
 
-  // Dynamically create language buttons based on settings
-  chrome.storage.sync.get(['targetLanguage', 'translationLanguage'], function(result) {
+  // Create a single button for the target language
+  chrome.storage.sync.get(['targetLanguage'], function(result) {
     const languageButtons = document.getElementById('language-buttons');
-    const languages = [result.targetLanguage, result.translationLanguage];
-    languages.forEach((lang, index) => {
-      if (lang) {
-        const button = document.createElement('button');
-        button.className = `mode-btn language-btn${index === 0 ? ' selected' : ''}`;
-        button.dataset.language = lang;
-        button.textContent = lang;
-        button.style.cssText = 'font-size: 14px; padding: 5px 10px; cursor: pointer; margin-right: 5px;';
-        languageButtons.appendChild(button);
-      }
-    });
-    addLanguageButtonListeners();
+    const button = document.createElement('button');
+    button.className = 'mode-btn language-btn selected';
+    button.dataset.language = result.targetLanguage || 'Target Language';
+    button.textContent = result.targetLanguage || 'Target Language';
+    button.style.cssText = 'font-size: 14px; padding: 5px 10px; cursor: pointer; margin-right: 5px;';
+    languageButtons.appendChild(button);
   });
 }
 
@@ -168,13 +162,8 @@ function speakWord(word) {
   const voices = window.speechSynthesis.getVoices();
   const selectedLanguage = document.querySelector('.language-btn.selected').dataset.language;
   
-  if (selectedLanguage === 'French') {
-    const frenchVoice = voices.find(voice => voice.lang.startsWith('fr'));
-    if (frenchVoice) utterance.voice = frenchVoice;
-  } else {
-    const englishVoice = voices.find(voice => voice.lang.startsWith('en'));
-    if (englishVoice) utterance.voice = englishVoice;
-  }
+  const languageVoice = voices.find(voice => voice.lang.startsWith(selectedLanguage.toLowerCase().slice(0, 2)));
+  if (languageVoice) utterance.voice = languageVoice;
   
   window.speechSynthesis.speak(utterance);
 }
