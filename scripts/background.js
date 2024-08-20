@@ -33,16 +33,21 @@ function clearCollection(mode) {
   });
 }
 
-async function generateFlashcards(text, mode, context, sendResponse) {
+async function generateFlashcards(text, mode, sendResponse) {
   try {
     const settings = await getSettings();
     if (!settings.apiKey) {
       throw new Error('API key not set. Please set it in the extension options.');
     }
 
-    settings.context = context; // Add context to settings
+    let context = '';
+    if (mode === 'language') {
+      // Assuming we have access to the getPhrase function here
+      // If not, we might need to pass it from the content script
+      context = getPhrase(text);
+    }
 
-    const prompt = generatePrompt(text, mode, settings);
+    const prompt = generatePrompt(text, mode, settings, context);
     console.log('Sending request with prompt:', prompt);
 
     const requestBody = {
@@ -84,7 +89,7 @@ async function generateFlashcards(text, mode, context, sendResponse) {
   }
 }
 
-function generatePrompt(text, mode, settings) {
+function generatePrompt(text, mode, settings, context = '') {
   switch (mode) {
     case 'flashcard':
       return settings.flashcardPrompt.replace('{{TEXT}}', text);
@@ -93,7 +98,7 @@ function generatePrompt(text, mode, settings) {
     case 'language':
       return settings.languagePrompt
         .replace('{{WORD}}', text)
-        .replace('{{PHRASE}}', settings.context || '')
+        .replace('{{PHRASE}}', context)
         .replace('{{TRANSLATION_LANGUAGE}}', settings.translationLanguage)
         .replace('{{TARGET_LANGUAGE2}}', settings.targetLanguage);
     default:
