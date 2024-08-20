@@ -6,7 +6,7 @@ document.addEventListener('DOMContentLoaded', () => {
   const explainPromptTextarea = document.getElementById('explain-prompt');
   const languagePromptTextarea = document.getElementById('language-prompt');
   const autoPopupCheckbox = document.getElementById('auto-popup');
-  const targetLanguageInput = document.getElementById('target-language');
+  const targetLanguageSelect = document.getElementById('target-language');
 
   // Load saved settings
   chrome.storage.sync.get(['apiKey', 'model', 'flashcardPrompt', 'explainPrompt', 'languagePrompt', 'autoPopup', 'targetLanguage'], (result) => {
@@ -16,7 +16,7 @@ document.addEventListener('DOMContentLoaded', () => {
     explainPromptTextarea.value = result.explainPrompt || 'Explain the following text in simple terms, focusing on the main concepts and their relationships. Use clear and concise language, and break down complex ideas into easily understandable parts.';
     languagePromptTextarea.value = result.languagePrompt || 'For the following text, identify key terms or phrases and provide their definitions and usage examples. Format each entry as follows:\nWord: [term]\nTranslation: [brief translation or equivalent]\nExample: [example sentence using the term]\nMeaning: [concise explanation]';
     autoPopupCheckbox.checked = result.autoPopup !== false;
-    targetLanguageInput.value = result.targetLanguage || '';
+    targetLanguageSelect.value = result.targetLanguage || 'English';
   });
 
   // Save settings
@@ -29,7 +29,7 @@ document.addEventListener('DOMContentLoaded', () => {
       explainPrompt: explainPromptTextarea.value,
       languagePrompt: languagePromptTextarea.value,
       autoPopup: autoPopupCheckbox.checked,
-      targetLanguage: targetLanguageInput.value
+      targetLanguage: targetLanguageSelect.value
     }, () => {
       alert('Settings saved successfully!');
     });
