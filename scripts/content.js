@@ -195,7 +195,7 @@ function displayFlashcards(flashcards, mode) {
     console.error('Flashcard container not found');
     return;
   }
-  flashcardContainer.innerHTML = '';
+  const existingFlashcards = Array.from(flashcardContainer.children);
   flashcards.forEach(flashcard => {
     const flashcardElement = document.createElement('div');
     flashcardElement.className = 'flashcard';
@@ -221,7 +221,12 @@ function displayFlashcards(flashcards, mode) {
     });
     flashcardElement.appendChild(removeBtn);
     
-    flashcardContainer.appendChild(flashcardElement);
+    flashcardContainer.insertBefore(flashcardElement, flashcardContainer.firstChild);
+  });
+  
+  // Append existing flashcards after the new ones
+  existingFlashcards.forEach(existingFlashcard => {
+    flashcardContainer.appendChild(existingFlashcard);
   });
   
   updateCollectionButtons();
