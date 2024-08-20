@@ -1,0 +1,182 @@
+:root {
+  --primary-color: #3498db;
+  --secondary-color: #2c3e50;
+  --background-color: #ecf0f1;
+  --text-color: #34495e;
+  --highlight-color: #e74c3c;
+  --button-min-width: 100px;
+  --button-height: 36px;
+  --button-font-size: 14px;
+}
+
+/* Extension Panel Styles */
+#flashcard-panel {
+  font-family: 'Roboto', Arial, sans-serif;
+  position: fixed;
+  top: 0;
+  right: 0;
+  width: 30%;
+  height: 100vh;
+  background-color: var(--background-color);
+  color: var(--text-color);
+  box-shadow: -2px 0 5px rgba(0, 0, 0, 0.1);
+  z-index: 9999;
+  overflow-y: auto;
+  transform: translateX(100%);
+  transition: transform 0.3s ease-in-out;
+}
+
+#flashcard-panel.open {
+  transform: translateX(0);
+}
+
+#panel-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 15px;
+  background-color: var(--secondary-color);
+  color: white;
+}
+
+#panel-header h2 {
+  margin: 0;
+  font-size: 18px;
+}
+
+#close-panel {
+  background: none;
+  border: none;
+  color: white;
+  font-size: 24px;
+  cursor: pointer;
+}
+
+#mode-selector {
+  display: flex;
+  justify-content: space-between;
+  margin: 15px;
+}
+
+.mode-btn {
+  flex: 1;
+  padding: 10px;
+  border: 1px solid var(--secondary-color);
+  background-color: white;
+  color: var(--secondary-color);
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.mode-btn:not(:last-child) {
+  margin-right: 10px;
+}
+
+.mode-btn.selected {
+  background-color: var(--secondary-color);
+  color: white;
+}
+
+#flashcard-container {
+  padding: 15px;
+}
+
+.flashcard {
+  margin-bottom: 15px;
+  padding: 15px;
+  border: 1px solid #ddd;
+  background-color: white;
+  border-radius: 3px;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+}
+
+.flashcard .question {
+  font-weight: bold;
+  margin-bottom: 10px;
+}
+
+.flashcard .answer {
+  color: var(--text-color);
+}
+
+/* Language mode specific styles */
+.flashcard.language-flashcard .word {
+  font-size: 1.2em;
+  font-weight: bold;
+  margin-bottom: 5px;
+}
+
+.flashcard.language-flashcard .translation {
+  font-style: italic;
+  margin-bottom: 5px;
+}
+
+.flashcard.language-flashcard .example {
+  margin-bottom: 5px;
+}
+
+.flashcard.language-flashcard .meaning {
+  color: var(--text-color);
+}
+
+#generate-btn {
+  display: block;
+  width: calc(100% - 30px);
+  margin: 15px;
+  padding: 10px;
+  background-color: var(--primary-color);
+  color: white;
+  border: none;
+  border-radius: 3px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+#generate-btn:hover {
+  background-color: #2980b9;
+}
+
+/* Popup Styles */
+body.popup {
+  width: 300px;
+  padding: 15px;
+  font-family: 'Roboto', Arial, sans-serif;
+}
+
+.popup h2 {
+  margin-top: 0;
+  color: var(--secondary-color);
+}
+
+.popup input[type="password"],
+.popup button {
+  width: 100%;
+  margin-bottom: 10px;
+  padding: 8px;
+  border: 1px solid #ddd;
+  border-radius: 3px;
+}
+
+.popup button {
+  background-color: var(--primary-color);
+  color: white;
+  border: none;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.popup button:hover {
+  background-color: #2980b9;
+}
+
+/* Highlight styles for selected text */
+::selection {
+  background: rgba(52, 152, 219, 0.3);
+}
+
+/* Responsive design for smaller screens */
+@media screen and (max-width: 768px) {
+  #flashcard-panel {
+    width: 80%;
+  }
+}
