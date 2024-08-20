@@ -449,21 +449,28 @@ function initializePanel() {
 }
 
 // Initial setup
-document.addEventListener('DOMContentLoaded', () => {
-  try {
-    initializePanel();
-    chrome.storage.sync.get('savedFlashcards', result => {
-      if (result.savedFlashcards) {
-        savedFlashcards = result.savedFlashcards;
-      }
-    });
-  } catch (error) {
-    console.error('Error initializing Flashcard Generator:', error);
+function setupExtension() {
+  if (chrome.runtime && chrome.runtime.id) {
+    try {
+      initializePanel();
+      chrome.storage.sync.get('savedFlashcards', result => {
+        if (result.savedFlashcards) {
+          savedFlashcards = result.savedFlashcards;
+        }
+      });
+      // Call this function after panel content is loaded
+      lazyLoadPanelContent();
+    } catch (error) {
+      console.error('Error initializing Flashcard Generator:', error);
+    }
+  } else {
+    console.warn('Extension context is invalid. Retrying in 1 second...');
+    setTimeout(setupExtension, 1000);
   }
-});
+}
 
-// Call this function after panel content is loaded
-lazyLoadPanelContent();
+// Use 'load' event instead of 'DOMContentLoaded' for more reliability
+window.addEventListener('load', setupExtension);
 function showLanguageModeInstruction() {
   const instruction = document.createElement('div');
   instruction.id = 'language-mode-instruction';
