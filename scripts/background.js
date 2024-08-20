@@ -34,14 +34,16 @@ function clearCollection(mode) {
 }
 
 async function generateFlashcards(text, mode, sendResponse, context = '') {
+  console.log('generateFlashcards called with:', { text, mode, context });
   try {
     const settings = await getSettings();
+    console.log('Settings retrieved:', settings);
     if (!settings.apiKey) {
       throw new Error('API key not set. Please set it in the extension options.');
     }
 
     const prompt = generatePrompt(text, mode, settings, context);
-    console.log('Sending request with prompt:', prompt);
+    console.log('Generated prompt:', prompt);
 
     const requestBody = {
       model: settings.model,
@@ -50,6 +52,7 @@ async function generateFlashcards(text, mode, sendResponse, context = '') {
     };
     console.log('Request body:', JSON.stringify(requestBody));
 
+    console.log('Sending request to API...');
     const response = await fetch('https://api.anthropic.com/v1/messages', {
       method: 'POST',
       headers: {
@@ -62,7 +65,7 @@ async function generateFlashcards(text, mode, sendResponse, context = '') {
 
     if (!response.ok) {
       const errorText = await response.text();
-      console.error('API response:', response.status, response.statusText, errorText);
+      console.error('API response error:', response.status, response.statusText, errorText);
       throw new Error(`API request failed: ${response.status} ${response.statusText}. ${errorText}`);
     }
 
@@ -74,7 +77,9 @@ async function generateFlashcards(text, mode, sendResponse, context = '') {
     }
 
     const content = data.content[0].text;
+    console.log('Parsed content:', content);
     const flashcards = parseFlashcards(content, mode);
+    console.log('Generated flashcards:', flashcards);
     sendResponse({ success: true, flashcards });
   } catch (error) {
     console.error('Error in generateFlashcards:', error);
