@@ -107,40 +107,41 @@ function generatePrompt(text, mode, settings, context = '') {
 }
 
 function parseFlashcards(content, mode) {
-  if (mode === 'language') {
-    console.log("parseFlashcards:", content);
-    const entries = content.split('\n\n');
-    return entries.map(entry => {
-      const lines = entry.split('\n');
-      return {
-        word: lines[0]?.split(': ')[1] || '',
-        translation: lines[1]?.split(': ')[1] || '',
-        question: lines[2]?.split(': ')[1] || '',
-        answer: lines[3]?.split(': ')[1] || ''
-      };
-    });
-  } else if (mode === 'explain') {
-    return [{ question: 'Explanation', answer: content }];
-  } else {
-    const flashcards = [];
-    const lines = content.split('\n');
-    let currentFlashcard = { question: '', answer: '' };
-    for (const line of lines) {
-      if (line.startsWith('Q:')) {
-        if (currentFlashcard.question) {
-          flashcards.push(currentFlashcard);
-          currentFlashcard = { question: '', answer: '' };
-        }
-        currentFlashcard.question = line.slice(2).trim();
-      } else if (line.startsWith('A:')) {
-        currentFlashcard.answer = line.slice(2).trim();
+  const flashcards = [];
+  const regex = /<T>(.*?)<\/T>|<Q>(.*?)<\/Q>|<A>(.*?)<\/A>/gs;
+  let matches;
+  let currentFlashcard = {};
+
+  while ((matches = regex.exec(content)) !== null) {
+    if (matches[1] !== undefined) {  // <T> tag
+      if (Object.keys(currentFlashcard).length > 0) {
+        flashcards.push(currentFlashcard);
+      }
+      currentFlashcard = { translation: matches[1].trim() };
+    } else if (matches[2] !== undefined) {  // <Q> tag
+      currentFlashcard.question = matches[2].trim();
+    } else if (matches[3] !== undefined) {  // <A> tag
+      currentFlashcard.answer = matches[3].trim();
+      if (mode === 'language') {
+        currentFlashcard.word = currentFlashcard.question;
+        flashcards.push(currentFlashcard);
+        currentFlashcard = {};
+      } else if (mode === 'explain' || mode === 'flashcard') {
+        flashcards.push(currentFlashcard);
+        currentFlashcard = {};
       }
     }
-    if (currentFlashcard.question) {
-      flashcards.push(currentFlashcard);
-    }
-    return flashcards;
   }
+
+  if (Object.keys(currentFlashcard).length > 0) {
+    flashcards.push(currentFlashcard);
+  }
+
+  if (mode === 'explain' && flashcards.length === 0) {
+    return [{ question: 'Explanation', answer: content }];
+  }
+
+  return flashcards;
 }
 
 async function getSettings() {
