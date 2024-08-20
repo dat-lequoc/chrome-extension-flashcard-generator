@@ -40,6 +40,7 @@ function createPanel() {
     overflow-y: auto;
     transform: translateX(100%);
     transition: transform 0.3s ease-in-out;
+    display: none;
   `;
   panel.innerHTML = `
     <div id="panel-header">
@@ -53,6 +54,11 @@ function createPanel() {
     </div>
     <div id="flashcard-container"></div>
     <button id="generate-btn">Generate</button>
+    <div id="collection">
+      <button id="add-to-collection-btn">Add to Collection (0)</button>
+      <button id="clear-collection-btn">Clear Collection</button>
+      <button id="export-csv-btn" style="display: none;">Export CSV</button>
+    </div>
   `;
   document.body.appendChild(panel);
   
@@ -60,6 +66,9 @@ function createPanel() {
   
   document.getElementById('close-panel').addEventListener('click', hidePanel);
   document.getElementById('generate-btn').addEventListener('click', generateFlashcards);
+  document.getElementById('add-to-collection-btn').addEventListener('click', addToCollection);
+  document.getElementById('clear-collection-btn').addEventListener('click', clearCollection);
+  document.getElementById('export-csv-btn').addEventListener('click', exportCSV);
   
   const modeButtons = document.querySelectorAll('.mode-btn');
   modeButtons.forEach(button => {
@@ -67,6 +76,7 @@ function createPanel() {
       modeButtons.forEach(btn => btn.classList.remove('selected'));
       button.classList.add('selected');
       mode = button.dataset.mode; // Update mode when a button is clicked
+      updateCollectionButtons();
     });
   });
 }
@@ -77,6 +87,8 @@ function showPanel() {
   }
   panel.style.transform = 'translateX(0)';
   pageContainer.style.width = `calc(100% - ${PANEL_WIDTH})`;
+  // Ensure the panel is visible
+  panel.style.display = 'block';
 }
 
 function hidePanel() {
@@ -309,7 +321,13 @@ document.addEventListener('mouseup', (e) => {
   if (e.altKey && getSelectedText()) {
     addHighlight();
   } else {
-    debouncedShowPanel();
+    const selectedText = getSelectedText();
+    if (selectedText) {
+      if (!panel) {
+        createPanel();
+      }
+      showPanel();
+    }
   }
 });
 
