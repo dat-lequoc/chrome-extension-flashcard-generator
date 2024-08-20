@@ -9,8 +9,7 @@ async function generateFlashcards(text, mode, sendResponse) {
   try {
     const apiKey = await getApiKey();
     if (!apiKey) {
-      sendResponse({ error: 'API key not set. Please set it in the extension options.' });
-      return;
+      throw new Error('API key not set. Please set it in the extension options.');
     }
 
     const prompt = generatePrompt(text, mode);
@@ -28,16 +27,16 @@ async function generateFlashcards(text, mode, sendResponse) {
     });
 
     if (!response.ok) {
-      throw new Error('API request failed');
+      throw new Error(`API request failed: ${response.status} ${response.statusText}`);
     }
 
     const data = await response.json();
     const content = data.content[0].text;
     const flashcards = parseFlashcards(content, mode);
-    sendResponse({ flashcards });
+    sendResponse({ success: true, flashcards });
   } catch (error) {
     console.error('Error:', error);
-    sendResponse({ error: error.message });
+    sendResponse({ success: false, error: error.message });
   }
 }
 
