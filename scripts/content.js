@@ -50,8 +50,7 @@ function createPanel() {
       <button class="mode-btn" data-mode="language" style="font-size: 14px; padding: 5px 10px; cursor: pointer;">Language</button>
     </div>
     <div id="language-buttons" style="display: none; margin-top: 10px;">
-      <button class="mode-btn language-btn selected" data-language="English" style="font-size: 14px; padding: 5px 10px; cursor: pointer; margin-right: 5px;">English</button>
-      <button class="mode-btn language-btn" data-language="French" style="font-size: 14px; padding: 5px 10px; cursor: pointer;">French</button>
+      <!-- Language buttons will be dynamically populated based on settings -->
     </div>
     <div id="flashcard-container" style="font-size: 14px;"></div>
     <button id="generate-btn" style="font-size: 14px; padding: 5px 10px; margin-top: 10px;">Generate</button>
@@ -80,6 +79,23 @@ function createPanel() {
       updateUIForMode(mode);
       updateCollectionButtons();
     });
+  });
+
+  // Dynamically create language buttons based on settings
+  chrome.storage.sync.get(['targetLanguage', 'translationLanguage'], function(result) {
+    const languageButtons = document.getElementById('language-buttons');
+    const languages = [result.targetLanguage, result.translationLanguage];
+    languages.forEach((lang, index) => {
+      if (lang) {
+        const button = document.createElement('button');
+        button.className = `mode-btn language-btn${index === 0 ? ' selected' : ''}`;
+        button.dataset.language = lang;
+        button.textContent = lang;
+        button.style.cssText = 'font-size: 14px; padding: 5px 10px; cursor: pointer; margin-right: 5px;';
+        languageButtons.appendChild(button);
+      }
+    });
+    addLanguageButtonListeners();
   });
 }
 
