@@ -123,7 +123,7 @@ function parseFlashcards(content, mode, text) {
     } else if (matches[3] !== undefined) {  // <A> tag
       currentFlashcard.answer = matches[3].trim();
       if (mode === 'language') {
-        currentFlashcard.word = currentFlashcard.question;
+        currentFlashcard.word = text;
         flashcards.push(currentFlashcard);
         currentFlashcard = {};
       } else if (mode === 'explain' || mode === 'flashcard') {
