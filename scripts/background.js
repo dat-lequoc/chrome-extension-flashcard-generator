@@ -12,7 +12,7 @@ async function generateFlashcards(text, mode, sendResponse) {
       throw new Error('API key not set. Please set it in the extension options.');
     }
 
-    const prompt = generatePrompt(text, mode, settings.systemPrompt);
+    const prompt = generatePrompt(text, mode, settings);
     const response = await fetch('https://api.anthropic.com/v1/messages', {
       method: 'POST',
       headers: {
@@ -40,14 +40,14 @@ async function generateFlashcards(text, mode, sendResponse) {
   }
 }
 
-function generatePrompt(text, mode, systemPrompt) {
+function generatePrompt(text, mode, settings) {
   switch (mode) {
     case 'flashcard':
-      return `${systemPrompt}\n\nText: ${text}`;
+      return `${settings.flashcardPrompt}\n\nText: ${text}`;
     case 'explain':
-      return `Explain the following text in simple terms, focusing on the main concepts. Use clear and concise language, and break down complex ideas into easily understandable parts.\n\nText: ${text}`;
+      return `${settings.explainPrompt}\n\nText: ${text}`;
     case 'language':
-      return `For the following text, identify key terms or phrases and provide their definitions and usage examples. Format each entry as follows:\nWord: [term]\nTranslation: [brief translation or equivalent]\nExample: [example sentence using the term]\nMeaning: [concise explanation]\n\nText: ${text}`;
+      return `${settings.languagePrompt}\n\nText: ${text}`;
     default:
       return `Summarize the key points of the following text:\n\n${text}`;
   }
@@ -87,11 +87,13 @@ function parseFlashcards(content, mode) {
 
 async function getSettings() {
   return new Promise(resolve => {
-    chrome.storage.sync.get(['apiKey', 'model', 'systemPrompt'], result => {
+    chrome.storage.sync.get(['apiKey', 'model', 'flashcardPrompt', 'explainPrompt', 'languagePrompt'], result => {
       resolve({
         apiKey: result.apiKey,
         model: result.model || 'claude-3-5-sonnet-20240620',
-        systemPrompt: result.systemPrompt || 'Generate concise flashcards based on the following text. Create 3-5 flashcards, each with a question (Q:) and an answer (A:). The questions should test key concepts, and the answers should be brief but complete.'
+        flashcardPrompt: result.flashcardPrompt || 'Generate concise flashcards based on the following text. Create 3-5 flashcards, each with a question (Q:) and an answer (A:). The questions should test key concepts, and the answers should be brief but complete.',
+        explainPrompt: result.explainPrompt || 'Explain the following text in simple terms, focusing on the main concepts and their relationships. Use clear and concise language, and break down complex ideas into easily understandable parts.',
+        languagePrompt: result.languagePrompt || 'For the following text, identify key terms or phrases and provide their definitions and usage examples. Format each entry as follows:\nWord: [term]\nTranslation: [brief translation or equivalent]\nExample: [example sentence using the term]\nMeaning: [concise explanation]'
       });
     });
   });

@@ -30,7 +30,7 @@
   <h1>Web Flashcard Generator Settings</h1>
   <form id="settings-form">
     <label for="api-key">Claude API Key:</label>
-    <input type="text" id="api-key" required>
+    <input type="password" id="api-key" required>
 
     <label for="model-select">Model:</label>
     <select id="model-select">
@@ -38,8 +38,14 @@
       <option value="claude-3-haiku-20240307">Claude 3 Haiku</option>
     </select>
 
-    <label for="system-prompt">System Prompt for Flashcard Generation:</label>
-    <textarea id="system-prompt" rows="5"></textarea>
+    <label for="flashcard-prompt">Flashcard Mode Prompt:</label>
+    <textarea id="flashcard-prompt" rows="5"></textarea>
+
+    <label for="explain-prompt">Explain Mode Prompt:</label>
+    <textarea id="explain-prompt" rows="5"></textarea>
+
+    <label for="language-prompt">Language Mode Prompt:</label>
+    <textarea id="language-prompt" rows="5"></textarea>
 
     <button type="submit">Save Settings</button>
   </form>
