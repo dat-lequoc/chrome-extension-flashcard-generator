@@ -259,9 +259,17 @@ function updateCollectionButtons() {
 }
 
 // Add event listeners for the new buttons
-document.getElementById('add-to-collection-btn').addEventListener('click', addToCollection);
-document.getElementById('clear-collection-btn').addEventListener('click', clearCollection);
-document.getElementById('export-csv-btn').addEventListener('click', exportCSV);
+function addEventListeners() {
+  document.getElementById('add-to-collection-btn')?.addEventListener('click', addToCollection);
+  document.getElementById('clear-collection-btn')?.addEventListener('click', clearCollection);
+  document.getElementById('export-csv-btn')?.addEventListener('click', exportCSV);
+}
+
+// Call this function after creating the panel
+function initializePanel() {
+  createPanel();
+  addEventListeners();
+}
 
 function addHighlight() {
   const selection = window.getSelection();
@@ -341,7 +349,7 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
 // Initial setup
 document.addEventListener('DOMContentLoaded', () => {
   try {
-    createPanel();
+    initializePanel();
     chrome.storage.sync.get('savedFlashcards', result => {
       if (result.savedFlashcards) {
         savedFlashcards = result.savedFlashcards;
