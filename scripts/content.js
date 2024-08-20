@@ -185,12 +185,6 @@ function displayFlashcards(flashcards, mode) {
         <div class="answer">A: ${flashcard.answer}</div>
       `;
     }
-    const saveBtn = document.createElement('button');
-    saveBtn.className = 'save-flashcard';
-    saveBtn.textContent = 'Save';
-    saveBtn.addEventListener('click', () => saveFlashcard(flashcard));
-    flashcardElement.appendChild(saveBtn);
-
     const removeBtn = document.createElement('button');
     removeBtn.className = 'remove-btn';
     removeBtn.textContent = 'Remove';
@@ -202,14 +196,60 @@ function displayFlashcards(flashcards, mode) {
     flashcardContainer.appendChild(flashcardElement);
   });
   
-  // Add export button if there are saved flashcards
-  if (savedFlashcards.length > 0) {
-    const exportButton = document.createElement('button');
-    exportButton.textContent = 'Export Flashcards';
-    exportButton.addEventListener('click', exportFlashcardsCSV);
-    flashcardContainer.appendChild(exportButton);
+  updateCollectionButtons();
+}
+
+function addToCollection() {
+  const currentMode = document.querySelector('.mode-btn.selected').dataset.mode;
+  const flashcards = Array.from(document.querySelectorAll(`.flashcard[data-mode="${currentMode}"]`));
+  flashcardCollections[currentMode] = flashcardCollections[currentMode].concat(flashcards.map(fc => {
+    return {
+      question: fc.querySelector('.question')?.textContent || fc.querySelector('.word')?.textContent,
+      answer: fc.querySelector('.answer')?.textContent || fc.querySelector('.meaning')?.textContent
+    };
+  }));
+  updateCollectionButtons();
+}
+
+function clearCollection() {
+  const currentMode = document.querySelector('.mode-btn.selected').dataset.mode;
+  if (confirm(`Are you sure you want to clear the ${currentMode} collection?`)) {
+    flashcardCollections[currentMode] = [];
+    updateCollectionButtons();
   }
 }
+
+function exportCSV() {
+  const currentMode = document.querySelector('.mode-btn.selected').dataset.mode;
+  const collection = flashcardCollections[currentMode];
+  let csvContent = "data:text/csv;charset=utf-8,Question,Answer\n";
+  
+  collection.forEach(flashcard => {
+    let question = flashcard.question.replace(/"/g, '""');
+    let answer = flashcard.answer.replace(/"/g, '""');
+    csvContent += `"${question}","${answer}"\n`;
+  });
+  
+  const encodedUri = encodeURI(csvContent);
+  const link = document.createElement("a");
+  link.setAttribute("href", encodedUri);
+  link.setAttribute("download", `${currentMode}_flashcards.csv`);
+  document.body.appendChild(link);
+  link.click();
+  document.body.removeChild(link);
+}
+
+function updateCollectionButtons() {
+  const currentMode = document.querySelector('.mode-btn.selected').dataset.mode;
+  const collectionCount = flashcardCollections[currentMode].length;
+  document.getElementById('add-to-collection-btn').textContent = `Add to Collection (${collectionCount})`;
+  document.getElementById('export-csv-btn').style.display = collectionCount > 0 ? 'block' : 'none';
+}
+
+// Add event listeners for the new buttons
+document.getElementById('add-to-collection-btn').addEventListener('click', addToCollection);
+document.getElementById('clear-collection-btn').addEventListener('click', clearCollection);
+document.getElementById('export-csv-btn').addEventListener('click', exportCSV);
 
 function addHighlight() {
   const selection = window.getSelection();
