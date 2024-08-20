@@ -210,14 +210,14 @@ function displayFlashcards(flashcards, mode) {
     flashcardElement.dataset.mode = mode;
     if (mode === 'language') {
       flashcardElement.innerHTML = `
-        <div class="word"><b>${flashcard.word}</b>: ${flashcard.translation}</div>
-        <div class="example">${flashcard.question}</div>
-        <div class="meaning">${flashcard.answer}</div>
+        <div class="word" style="font-size: 1.2em;"><b>${flashcard.translation}</b></div>
+        <div class="example" style="font-style: italic; opacity: 0.8;">• ${flashcard.question}</div>
+        <div class="meaning">• ${flashcard.answer}</div>
       `;
     } else {
       flashcardElement.innerHTML = `
         <div class="question"><strong>Q: ${flashcard.question}</strong></div>
-        <div class="answer">A: ${flashcard.answer}</div>
+        <div class="answer"><strong>A:</strong> ${flashcard.answer}</div>
       `;
     }
     const removeBtn = document.createElement('button');
@@ -573,6 +573,7 @@ function generateLanguageFlashcard(word, phrase, targetLanguage) {
     targetLanguage: targetLanguage
   }, response => {
     hideLoadingIndicator();
+    console.log("generateL:",response);
     if (response.success) {
       displayFlashcards(response.flashcards, 'language');
     } else {
@@ -598,6 +599,7 @@ function handleLanguageModeSelection(event) {
     chrome.storage.sync.get('targetLanguage', (result) => {
       const targetLanguage = result.targetLanguage || 'English';
       const phrase = getPhrase(range, word);
+      console.log("handleLang:",word, phrase, targetLanguage);
       generateLanguageFlashcard(word, phrase, targetLanguage);
     });
   }
