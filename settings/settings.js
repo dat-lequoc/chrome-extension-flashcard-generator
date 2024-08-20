@@ -37,4 +37,37 @@ document.addEventListener('DOMContentLoaded', () => {
       alert('Settings saved successfully!');
     });
   });
+
+  // Add event listener for the reset button
+  document.getElementById('reset-defaults').addEventListener('click', resetToDefaults);
 });
+
+function resetToDefaults() {
+  if (confirm('Are you sure you want to reset all settings to their default values?')) {
+    const defaultSettings = {
+      apiKey: '',
+      model: 'claude-3-5-sonnet-20240620',
+      flashcardPrompt: 'Generate concise flashcards based on the following text. Create 3-5 flashcards, each with a question (Q:) and an answer (A:). The questions should test key concepts, and the answers should be brief but complete.',
+      explainPrompt: 'Explain the following text in simple terms, focusing on the main concepts and their relationships. Use clear and concise language, and break down complex ideas into easily understandable parts.',
+      languagePrompt: 'For the following text, identify key terms or phrases and provide their definitions and usage examples. Format each entry as follows:\nWord: [term]\nTranslation: [brief translation or equivalent]\nExample: [example sentence using the term]\nMeaning: [concise explanation]',
+      autoPopup: true,
+      translationLanguage: 'Vietnamese',
+      targetLanguage: 'English'
+    };
+
+    // Update form fields with default values
+    apiKeyInput.value = defaultSettings.apiKey;
+    modelSelect.value = defaultSettings.model;
+    flashcardPromptTextarea.value = defaultSettings.flashcardPrompt;
+    explainPromptTextarea.value = defaultSettings.explainPrompt;
+    languagePromptTextarea.value = defaultSettings.languagePrompt;
+    autoPopupCheckbox.checked = defaultSettings.autoPopup;
+    translationLanguageSelect.value = defaultSettings.translationLanguage;
+    targetLanguageSelect.value = defaultSettings.targetLanguage;
+
+    // Save default settings to storage
+    chrome.storage.sync.set(defaultSettings, () => {
+      alert('Settings have been reset to default values.');
+    });
+  }
+}
