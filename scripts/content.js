@@ -52,8 +52,8 @@ function createPanel() {
     <div id="language-buttons" style="display: none; margin-top: 10px;">
       <!-- Language buttons will be dynamically populated based on settings -->
     </div>
+    <button id="generate-btn" style="font-size: 14px; padding: 5px 10px; margin-top: 10px; margin-bottom: 10px;">Generate</button>
     <div id="flashcard-container" style="font-size: 14px;"></div>
-    <button id="generate-btn" style="font-size: 14px; padding: 5px 10px; margin-top: 10px;">Generate</button>
     <div id="collection" style="margin-top: 10px;">
       <button id="add-to-collection-btn" style="font-size: 14px; padding: 5px 10px;">Add to Collection (0)</button>
       <button id="clear-collection-btn" style="font-size: 14px; padding: 5px 10px;">Clear Collection</button>
