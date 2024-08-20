@@ -43,25 +43,22 @@ function createPanel() {
     display: none;
   `;
   panel.innerHTML = `
-    <div id="panel-header">
-      <h2>Flashcard Generator</h2>
-      <button id="close-panel">×</button>
+    <button id="close-panel" style="position: absolute; top: 5px; right: 5px; font-size: 16px;">×</button>
+    <div id="mode-selector" style="margin-top: 20px;">
+      <button class="mode-btn selected" data-mode="flashcard" style="font-size: 14px; padding: 5px 10px;">Flashcard</button>
+      <button class="mode-btn" data-mode="explain" style="font-size: 14px; padding: 5px 10px;">Explain</button>
+      <button class="mode-btn" data-mode="language" style="font-size: 14px; padding: 5px 10px;">Language</button>
     </div>
-    <div id="mode-selector">
-      <button class="mode-btn selected" data-mode="flashcard">Flashcard</button>
-      <button class="mode-btn" data-mode="explain">Explain</button>
-      <button class="mode-btn" data-mode="language">Language</button>
+    <div id="language-buttons" style="display: none; margin-top: 10px;">
+      <button class="mode-btn language-btn selected" data-language="English" style="font-size: 14px; padding: 5px 10px;">English</button>
+      <button class="mode-btn language-btn" data-language="French" style="font-size: 14px; padding: 5px 10px;">French</button>
     </div>
-    <div id="language-buttons" style="display: none;">
-      <button class="mode-btn language-btn selected" data-language="English">English</button>
-      <button class="mode-btn language-btn" data-language="French">French</button>
-    </div>
-    <div id="flashcard-container"></div>
-    <button id="generate-btn">Generate</button>
-    <div id="collection">
-      <button id="add-to-collection-btn">Add to Collection (0)</button>
-      <button id="clear-collection-btn">Clear Collection</button>
-      <button id="export-csv-btn" style="display: none;">Export CSV</button>
+    <div id="flashcard-container" style="font-size: 14px;"></div>
+    <button id="generate-btn" style="font-size: 14px; padding: 5px 10px; margin-top: 10px;">Generate</button>
+    <div id="collection" style="margin-top: 10px;">
+      <button id="add-to-collection-btn" style="font-size: 14px; padding: 5px 10px;">Add to Collection (0)</button>
+      <button id="clear-collection-btn" style="font-size: 14px; padding: 5px 10px;">Clear Collection</button>
+      <button id="export-csv-btn" style="display: none; font-size: 14px; padding: 5px 10px;">Export CSV</button>
     </div>
   `;
   document.body.appendChild(panel);
