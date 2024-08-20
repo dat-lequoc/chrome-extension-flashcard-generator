@@ -582,13 +582,19 @@ function generateLanguageFlashcard(word, phrase, targetLanguage) {
   });
 }
 
+let lastProcessedWord = '';
+let processingWord = false;
+
 function handleLanguageModeSelection(event) {
-  if (mode !== 'language') return;
+  if (mode !== 'language' || processingWord) return;
 
   const selection = window.getSelection();
   const word = selection.toString().trim();
 
-  if (word && word.length < 20) {
+  if (word && word.length < 20 && word !== lastProcessedWord) {
+    processingWord = true;
+    lastProcessedWord = word;
+
     const range = selection.getRangeAt(0);
     const span = document.createElement('span');
     span.style.backgroundColor = 'yellow';
@@ -599,10 +605,38 @@ function handleLanguageModeSelection(event) {
     chrome.storage.sync.get('targetLanguage', (result) => {
       const targetLanguage = result.targetLanguage || 'English';
       const phrase = getPhrase(range, word);
-      console.log("handleLang:",word, phrase, targetLanguage);
-      generateLanguageFlashcard(word, phrase, targetLanguage);
+      console.log("handleLang:", word, phrase, targetLanguage);
+      generateLanguageFlashcard(word, phrase, targetLanguage)
+        .finally(() => {
+          processingWord = false;
+        });
     });
   }
 }
 
 document.addEventListener('dblclick', handleLanguageModeSelection);
+
+// Modify the generateLanguageFlashcard function to return a promise
+function generateLanguageFlashcard(word, phrase, targetLanguage) {
+  showLoadingIndicator();
+  
+  return new Promise((resolve, reject) => {
+    chrome.runtime.sendMessage({
+      action: 'generateFlashcards',
+      text: word,
+      context: phrase,
+      mode: 'language',
+      targetLanguage: targetLanguage
+    }, response => {
+      hideLoadingIndicator();
+      console.log("generateL:", response);
+      if (response.success) {
+        displayFlashcards(response.flashcards, 'language');
+        resolve();
+      } else {
+        alert('Error: ' + response.error);
+        reject(new Error(response.error));
+      }
+    });
+  });
+}
