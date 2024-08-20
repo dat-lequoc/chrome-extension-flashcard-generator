@@ -246,6 +246,13 @@ document.addEventListener('mouseup', (e) => {
   }
 });
 
+// Listen for messages from the popup
+chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
+  if (request.action === "showPanel") {
+    showPanel();
+  }
+});
+
 // Initial setup
 document.addEventListener('DOMContentLoaded', () => {
   try {

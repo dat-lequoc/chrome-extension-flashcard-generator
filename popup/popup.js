@@ -3,7 +3,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
   openFlashcardPanelBtn.addEventListener('click', () => {
     chrome.tabs.query({active: true, currentWindow: true}, (tabs) => {
-      chrome.tabs.sendMessage(tabs[0].id, {action: "openFlashcardPanel"});
+      chrome.tabs.sendMessage(tabs[0].id, {action: "showPanel"});
     });
   });
 });
