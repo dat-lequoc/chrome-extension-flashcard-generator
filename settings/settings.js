@@ -10,15 +10,22 @@ document.addEventListener('DOMContentLoaded', () => {
   const targetLanguageSelect = document.getElementById('target-language');
 
   // Load saved settings
-  chrome.storage.sync.get(['apiKey', 'model', 'flashcardPrompt', 'explainPrompt', 'languagePrompt', 'autoPopup', 'translationLanguage', 'targetLanguage'], (result) => {
-    apiKeyInput.value = result.apiKey || '';
-    modelSelect.value = result.model || 'claude-3-5-sonnet-20240620';
-    flashcardPromptTextarea.value = result.flashcardPrompt || 'Generate concise flashcards based on the following text. Create 3-5 flashcards, each with a question (Q:) and an answer (A:). The questions should test key concepts, and the answers should be brief but complete.';
-    explainPromptTextarea.value = result.explainPrompt || 'Explain the following text in simple terms, focusing on the main concepts and their relationships. Use clear and concise language, and break down complex ideas into easily understandable parts.';
-    languagePromptTextarea.value = result.languagePrompt || 'For the following text, identify key terms or phrases and provide their definitions and usage examples. Format each entry as follows:\nWord: [term]\nTranslation: [brief translation or equivalent]\nExample: [example sentence using the term]\nMeaning: [concise explanation]';
-    autoPopupCheckbox.checked = result.autoPopup !== false;
-    translationLanguageSelect.value = result.translationLanguage || 'Vietnamese';
-    targetLanguageSelect.value = result.targetLanguage || 'English';
+  // Load default prompts from files
+  Promise.all([
+    fetch(chrome.runtime.getURL('prompts/flashcard_prompt.txt')).then(response => response.text()),
+    fetch(chrome.runtime.getURL('prompts/explain_prompt.txt')).then(response => response.text()),
+    fetch(chrome.runtime.getURL('prompts/language_prompt.txt')).then(response => response.text())
+  ]).then(([defaultFlashcardPrompt, defaultExplainPrompt, defaultLanguagePrompt]) => {
+    chrome.storage.sync.get(['apiKey', 'model', 'flashcardPrompt', 'explainPrompt', 'languagePrompt', 'autoPopup', 'translationLanguage', 'targetLanguage'], (result) => {
+      apiKeyInput.value = result.apiKey || '';
+      modelSelect.value = result.model || 'claude-3-5-sonnet-20240620';
+      flashcardPromptTextarea.value = result.flashcardPrompt || defaultFlashcardPrompt.trim();
+      explainPromptTextarea.value = result.explainPrompt || defaultExplainPrompt.trim();
+      languagePromptTextarea.value = result.languagePrompt || defaultLanguagePrompt.trim();
+      autoPopupCheckbox.checked = result.autoPopup !== false;
+      translationLanguageSelect.value = result.translationLanguage || 'Vietnamese';
+      targetLanguageSelect.value = result.targetLanguage || 'English';
+    });
   });
 
   // Save settings
