@@ -515,6 +515,25 @@ function getPhrase(range, word) {
   return phrase.trim();
 }
 
+function generateLanguageFlashcard(word, phrase, targetLanguage) {
+  showLoadingIndicator();
+  
+  chrome.runtime.sendMessage({
+    action: 'generateFlashcards',
+    text: word,
+    context: phrase,
+    mode: 'language',
+    targetLanguage: targetLanguage
+  }, response => {
+    hideLoadingIndicator();
+    if (response.success) {
+      displayFlashcards(response.flashcards, 'language');
+    } else {
+      alert('Error: ' + response.error);
+    }
+  });
+}
+
 function handleLanguageModeSelection(event) {
   if (mode !== 'language') return;
 
