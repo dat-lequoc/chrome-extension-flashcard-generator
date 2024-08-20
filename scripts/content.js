@@ -53,8 +53,8 @@ function createPanel() {
       <button class="mode-btn" data-mode="language">Language</button>
     </div>
     <div id="language-buttons" style="display: none;">
-      <button class="language-btn selected" data-language="English">English</button>
-      <button class="language-btn" data-language="French">French</button>
+      <button class="mode-btn language-btn selected" data-language="English">English</button>
+      <button class="mode-btn language-btn" data-language="French">French</button>
     </div>
     <div id="flashcard-container"></div>
     <button id="generate-btn">Generate</button>
@@ -384,6 +384,14 @@ function updateUIForMode(mode) {
   if (mode === 'language') {
     generateBtn.style.display = 'none';
     languageButtons.style.display = 'flex';
+    // Ensure a language is selected
+    const selectedLanguageBtn = languageButtons.querySelector('.selected');
+    if (!selectedLanguageBtn) {
+      const defaultLanguageBtn = languageButtons.querySelector('[data-language="English"]');
+      if (defaultLanguageBtn) {
+        defaultLanguageBtn.classList.add('selected');
+      }
+    }
   } else {
     generateBtn.style.display = 'block';
     languageButtons.style.display = 'none';
@@ -396,6 +404,9 @@ function addLanguageButtonListeners() {
     button.addEventListener('click', () => {
       languageButtons.forEach(btn => btn.classList.remove('selected'));
       button.classList.add('selected');
+      // Update the mode when a language button is clicked
+      mode = 'language';
+      updateUIForMode(mode);
     });
   });
 }
@@ -405,6 +416,11 @@ function initializePanel() {
   createPanel();
   addEventListeners();
   addLanguageButtonListeners();
+  // Set English as default language
+  const englishButton = document.querySelector('.language-btn[data-language="English"]');
+  if (englishButton) {
+    englishButton.classList.add('selected');
+  }
 }
 
 // Initial setup
