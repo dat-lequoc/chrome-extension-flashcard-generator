@@ -1,18 +1,3 @@
-// Function to reset storage
-function resetStorage() {
-  chrome.storage.sync.clear(() => {
-    console.log('Storage has been cleared');
-    loadSettings();
-  });
-}
-
-// Check if it's the first load
-chrome.runtime.onInstalled.addListener((details) => {
-  if (details.reason === 'install') {
-    resetStorage();
-  }
-});
-
 document.addEventListener('DOMContentLoaded', loadSettings);
 
 function loadSettings() {
@@ -65,7 +50,25 @@ function saveSettings(e) {
 
 function resetToDefaults() {
   if (confirm('Are you sure you want to reset all settings to their default values?')) {
-    resetStorage();
+    // Load default prompts from files
+    Promise.all([
+      fetch(chrome.runtime.getURL('prompts/flashcard_prompt.txt')).then(response => response.text()),
+      fetch(chrome.runtime.getURL('prompts/explain_prompt.txt')).then(response => response.text()),
+      fetch(chrome.runtime.getURL('prompts/language_prompt.txt')).then(response => response.text())
+    ]).then(([defaultFlashcardPrompt, defaultExplainPrompt, defaultLanguagePrompt]) => {
+      // Set default values
+      document.getElementById('api-key').value = '';
+      document.getElementById('model-select').value = 'claude-3-5-sonnet-20240620';
+      document.getElementById('flashcard-prompt').value = defaultFlashcardPrompt.trim();
+      document.getElementById('explain-prompt').value = defaultExplainPrompt.trim();
+      document.getElementById('language-prompt').value = defaultLanguagePrompt.trim();
+      document.getElementById('auto-popup').checked = true;
+      document.getElementById('translation-language').value = 'Vietnamese';
+      document.getElementById('target-language').value = 'English';
+
+      // Save the default settings
+      saveSettings(new Event('submit'));
+    });
   }
 }
 
