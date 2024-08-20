@@ -73,10 +73,10 @@ function parseFlashcards(content, mode) {
     return entries.map(entry => {
       const lines = entry.split('\n');
       return {
-        word: lines[0].split(': ')[1],
-        translation: lines[1].split(': ')[1],
-        question: lines[2].split(': ')[1],
-        answer: lines[3].split(': ')[1]
+        word: lines[0]?.split(': ')[1] || '',
+        translation: lines[1]?.split(': ')[1] || '',
+        question: lines[2]?.split(': ')[1] || '',
+        answer: lines[3]?.split(': ')[1] || ''
       };
     });
   } else if (mode === 'explain') {
@@ -84,16 +84,20 @@ function parseFlashcards(content, mode) {
   } else {
     const flashcards = [];
     const lines = content.split('\n');
-    let currentQuestion = '';
+    let currentFlashcard = { question: '', answer: '' };
     for (const line of lines) {
       if (line.startsWith('Q:')) {
-        if (currentQuestion) {
-          flashcards.push({ question: currentQuestion, answer: '' });
+        if (currentFlashcard.question) {
+          flashcards.push(currentFlashcard);
+          currentFlashcard = { question: '', answer: '' };
         }
-        currentQuestion = line.slice(2).trim();
+        currentFlashcard.question = line.slice(2).trim();
       } else if (line.startsWith('A:')) {
-        flashcards[flashcards.length - 1].answer = line.slice(2).trim();
+        currentFlashcard.answer = line.slice(2).trim();
       }
+    }
+    if (currentFlashcard.question) {
+      flashcards.push(currentFlashcard);
     }
     return flashcards;
   }
