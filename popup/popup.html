@@ -6,21 +6,80 @@
   <title>Web Flashcard Generator</title>
   <style>
     body {
-      width: 300px;
-      padding: 10px;
+      width: 400px;
+      padding: 20px;
       font-family: Arial, sans-serif;
     }
-    input, button {
+    input, button, select, textarea {
       width: 100%;
       margin-bottom: 10px;
+      padding: 5px;
+    }
+    #settings-panel {
+      background-color: #f0f0f0;
+      padding: 10px;
+      margin-top: 10px;
+      border-radius: 5px;
+    }
+    .mode-btn {
+      width: auto;
+      margin-right: 5px;
+    }
+    #language-buttons {
+      margin-top: 10px;
+    }
+    #flashcards {
+      margin-top: 20px;
+    }
+    .flashcard {
+      background-color: #fff;
+      border: 1px solid #ddd;
+      padding: 10px;
+      margin-bottom: 10px;
+      border-radius: 5px;
+    }
+    .remove-btn {
+      background-color: #ff4d4d;
+      color: white;
+      border: none;
+      padding: 5px 10px;
+      cursor: pointer;
+      float: right;
     }
   </style>
 </head>
 <body>
   <h2>Web Flashcard Generator</h2>
-  <input type="password" id="api-key" placeholder="Enter your Claude API key">
-  <button id="save-api-key">Save API Key</button>
-  <p>Select text on any webpage and click the extension icon to generate flashcards!</p>
+  <div id="settings-panel">
+    <input type="password" id="api-key" placeholder="Enter your Claude API key">
+    <select id="model-select">
+      <option value="claude-3-5-sonnet-20240620">Claude 3.5 Sonnet</option>
+      <option value="claude-3-haiku-20240307">Claude 3 Haiku</option>
+    </select>
+    <textarea id="system-prompt" placeholder="Enter system prompt for flashcard generation">Generate concise flashcards based on the following text. The number of flashcards should be proportional to the text's length and complexity, with a minimum of 1 and a maximum of 10. Each flashcard should have a question (Q:) that tests a key concept and an answer (A:) that is brief but complete. Ensure that the flashcards cover different aspects of the text when possible. Use <b> tags to emphasize important words or phrases in both questions and answers. Cite the short code or example to the question if needed.</textarea>
+    <textarea id="explain-prompt" placeholder="Enter system prompt for explanation" style="display: none;">Explain the following text in simple terms, focusing on the main concepts and their relationships. Use clear and concise language, and break down complex ideas into easily understandable parts. If there are any technical terms, provide brief explanations for them. Return your explanation in markdown format.</textarea>
+    <textarea id="language-prompt" placeholder="Enter system prompt for language mode" style="display: none;">Explain the word in the phrase in {targetLanguage} using this format:
+
+T: [Translation of the word in Vietnamese]
+Q: [Original phrase with the target word in <b> tags, or craft an example with ONLY the target word in <b> tags if no phrase is provided. The Q must contain the word in <b> tags.]
+A: [Short explanation of the word's meaning in the context]</textarea>
+  </div>
+  <div id="mode-toggle">
+    <button class="mode-btn selected" data-mode="flashcard">Flashcard</button>
+    <button class="mode-btn" data-mode="explain">Explain</button>
+    <button class="mode-btn" data-mode="language">Language</button>
+  </div>
+  <div id="language-buttons" style="display: none;">
+    <button class="mode-btn" data-language="English">English</button>
+    <button class="mode-btn" data-language="French">French</button>
+  </div>
+  <button id="generate-btn">Generate</button>
+  <div id="flashcards"></div>
+  <div id="collection">
+    <button id="add-to-collection-btn">Add to Collection (0)</button>
+    <button id="clear-collection-btn">Clear Collection</button>
+  </div>
+  <button id="export-csv-btn" style="display: none;">Export Flashcards to CSV</button>
   <script src="popup.js"></script>
 </body>
 </html>
