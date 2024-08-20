@@ -34,6 +34,15 @@ function loadSettings() {
 
 function saveSettings(e) {
     e.preventDefault();
+    const apiKeyInput = document.getElementById('api-key');
+    const modelSelect = document.getElementById('model-select');
+    const flashcardPromptTextarea = document.getElementById('flashcard-prompt');
+    const explainPromptTextarea = document.getElementById('explain-prompt');
+    const languagePromptTextarea = document.getElementById('language-prompt');
+    const autoPopupCheckbox = document.getElementById('auto-popup');
+    const translationLanguageSelect = document.getElementById('translation-language');
+    const targetLanguageSelect = document.getElementById('target-language');
+
     chrome.storage.sync.set({
       apiKey: apiKeyInput.value,
       model: modelSelect.value,
