@@ -52,6 +52,10 @@ function createPanel() {
       <button class="mode-btn" data-mode="explain">Explain</button>
       <button class="mode-btn" data-mode="language">Language</button>
     </div>
+    <div id="language-buttons" style="display: none;">
+      <button class="language-btn selected" data-language="English">English</button>
+      <button class="language-btn" data-language="French">French</button>
+    </div>
     <div id="flashcard-container"></div>
     <button id="generate-btn">Generate</button>
     <div id="collection">
@@ -123,11 +127,13 @@ function generateFlashcards() {
   const mode = document.querySelector('.mode-btn.selected').dataset.mode;
   
   if (mode === 'language') {
-    // Hide generate button in language mode
     document.getElementById('generate-btn').style.display = 'none';
-    // Show instruction for language mode
+    document.getElementById('language-buttons').style.display = 'flex';
     showLanguageModeInstruction();
     return;
+  } else {
+    document.getElementById('generate-btn').style.display = 'block';
+    document.getElementById('language-buttons').style.display = 'none';
   }
   
   showLoadingIndicator();
@@ -144,6 +150,22 @@ function generateFlashcards() {
       alert('Error: ' + response.error);
     }
   });
+}
+
+function speakWord(word) {
+  const utterance = new SpeechSynthesisUtterance(word);
+  const voices = window.speechSynthesis.getVoices();
+  const selectedLanguage = document.querySelector('.language-btn.selected').dataset.language;
+  
+  if (selectedLanguage === 'French') {
+    const frenchVoice = voices.find(voice => voice.lang.startsWith('fr'));
+    if (frenchVoice) utterance.voice = frenchVoice;
+  } else {
+    const englishVoice = voices.find(voice => voice.lang.startsWith('en'));
+    if (englishVoice) utterance.voice = englishVoice;
+  }
+  
+  window.speechSynthesis.speak(utterance);
 }
 
 function saveFlashcard(flashcard) {
@@ -339,12 +361,40 @@ document.addEventListener('mouseup', (e) => {
   }
 });
 
+document.addEventListener('dblclick', (e) => {
+  if (mode === 'language') {
+    const selectedText = getSelectedText();
+    if (selectedText && selectedText.length < 20) {
+      speakWord(selectedText);
+      handleLanguageModeSelection(e);
+    }
+  }
+});
+
 // Listen for messages from the popup
 chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
   if (request.action === "showPanel") {
     showPanel();
   }
 });
+
+// Add event listeners for language buttons
+function addLanguageButtonListeners() {
+  const languageButtons = document.querySelectorAll('.language-btn');
+  languageButtons.forEach(button => {
+    button.addEventListener('click', () => {
+      languageButtons.forEach(btn => btn.classList.remove('selected'));
+      button.classList.add('selected');
+    });
+  });
+}
+
+// Call this function after creating the panel
+function initializePanel() {
+  createPanel();
+  addEventListeners();
+  addLanguageButtonListeners();
+}
 
 // Initial setup
 document.addEventListener('DOMContentLoaded', () => {
