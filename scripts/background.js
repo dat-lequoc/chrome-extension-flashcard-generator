@@ -6,7 +6,7 @@ let flashcardCollections = {
 
 chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
   if (request.action === 'generateFlashcards') {
-    generateFlashcards(request.text, request.mode, sendResponse);
+    generateFlashcards(request.text, request.mode, sendResponse, request.context);
     return true;  // Indicates we will send a response asynchronously
   } else if (request.action === 'updateCollection') {
     updateCollection(request.mode, request.flashcards);
@@ -33,17 +33,11 @@ function clearCollection(mode) {
   });
 }
 
-async function generateFlashcards(text, mode, sendResponse) {
+async function generateFlashcards(text, mode, sendResponse, context = '') {
   try {
     const settings = await getSettings();
     if (!settings.apiKey) {
       throw new Error('API key not set. Please set it in the extension options.');
-    }
-
-    let context = '';
-    if (mode === 'language') {
-      // The context is now passed from the content script
-      context = request.context || '';
     }
 
     const prompt = generatePrompt(text, mode, settings, context);
