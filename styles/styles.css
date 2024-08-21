@@ -141,21 +141,20 @@
   display: flex;
   flex-direction: column;
   margin: 10px 15px;
-  gap: 10px;
+  gap: 20px; /* Increased gap for more spacing */
 }
 
 .top-button-container {
   display: flex;
-  justify-content: space-between;
+  flex-direction: column;
   gap: 10px;
 }
 
 #add-to-collection-btn,
 #clear-collection-btn,
 #export-csv-btn {
-  flex: 1;
-  min-width: 0; /* Allow buttons to shrink below their content size */
-  padding: 10px;
+  width: 100%;
+  padding: 15px; /* Increased padding for larger buttons */
   color: white;
   border: none;
   border-radius: 3px;
@@ -164,11 +163,12 @@
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
-  font-size: 12px; /* Reduce font size to fit text */
+  font-size: 14px; /* Increased font size */
+  text-align: center;
 }
 
 #export-csv-btn {
-  width: 100%;
+  margin-top: 10px; /* Additional spacing for export button */
 }
 
 #add-to-collection-btn {
