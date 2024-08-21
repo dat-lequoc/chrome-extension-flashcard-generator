@@ -483,7 +483,6 @@ function addEventListeners() {
     };
   }
 
-  // Debounced handleLanguageModeSelection
   const debouncedHandleLanguageModeSelection = debounce((e) => {
     if (mode === 'language') {
       const selectedText = getSelectedText();
