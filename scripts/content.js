@@ -171,7 +171,7 @@ function showGeneratingNotification() {
     top: 20px;
     left: 50%;
     transform: translateX(-50%);
-    background-color: #4CAF50;
+    background-color: rgba(76, 175, 80, 0.8);
     color: white;
     padding: 10px 20px;
     border-radius: 5px;
@@ -180,7 +180,7 @@ function showGeneratingNotification() {
   document.body.appendChild(notification);
   setTimeout(() => {
     hideGeneratingNotification();
-  }, 2000);
+  }, 3000);
 }
 
 function hideGeneratingNotification() {
