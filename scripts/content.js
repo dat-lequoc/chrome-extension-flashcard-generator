@@ -439,41 +439,47 @@ function lazyLoadPanelContent() {
   });
 }
 
-// Event Listeners
-document.addEventListener('mouseup', (e) => {
-  if (e.altKey && getSelectedText()) {
-    addHighlight();
-  } else {
-    const selectedText = getSelectedText();
-    if (selectedText) {
-      chrome.storage.sync.get('autoPopup', (result) => {
-        if (result.autoPopup !== false) {
-          if (!panel) {
-            createPanel();
-          }
-          showPanel();
-        }
-      });
-    }
-  }
-});
-
-document.addEventListener('dblclick', (e) => {
-  if (mode === 'language') {
-    const selectedText = getSelectedText();
-    if (selectedText && selectedText.length < 20) {
-      speakWord(selectedText);
-      handleLanguageModeSelection(e);
-    }
-  }
-});
-
 // Listen for messages from the popup
 chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
   if (request.action === "showPanel") {
-    showPanel();
+    initializeExtension();
   }
 });
+
+function initializeExtension() {
+  if (!panel) {
+    createPanel();
+  }
+  showPanel();
+  addEventListeners();
+}
+
+function addEventListeners() {
+  document.addEventListener('mouseup', (e) => {
+    if (e.altKey && getSelectedText()) {
+      addHighlight();
+    } else {
+      const selectedText = getSelectedText();
+      if (selectedText) {
+        chrome.storage.sync.get('autoPopup', (result) => {
+          if (result.autoPopup !== false) {
+            showPanel();
+          }
+        });
+      }
+    }
+  });
+
+  document.addEventListener('dblclick', (e) => {
+    if (mode === 'language') {
+      const selectedText = getSelectedText();
+      if (selectedText && selectedText.length < 20) {
+        speakWord(selectedText);
+        handleLanguageModeSelection(e);
+      }
+    }
+  });
+}
 
 // Add event listeners for language buttons
 function updateUIForMode(mode) {
@@ -487,12 +493,6 @@ function updateUIForMode(mode) {
     generateBtn.style.display = 'block';
     languageModeGuide.style.display = 'none';
   }
-}
-
-// Call this function after creating the panel
-function initializePanel() {
-  createPanel();
-  addEventListeners();
 }
 
 // Initial setup
