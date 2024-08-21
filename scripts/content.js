@@ -273,13 +273,21 @@ function addToCollection() {
   });
   
   chrome.runtime.sendMessage({
-    action: 'updateCollection',
-    mode: currentMode,
-    flashcards: newFlashcards
-  }, () => {
-    updateCollectionButtons();
-    // Remove all current flashcards from display
-    flashcards.forEach(fc => fc.remove());
+    action: 'getCollection',
+    mode: currentMode
+  }, response => {
+    const existingCollection = response.collection || [];
+    const updatedCollection = [...existingCollection, ...newFlashcards];
+    
+    chrome.runtime.sendMessage({
+      action: 'updateCollection',
+      mode: currentMode,
+      flashcards: updatedCollection
+    }, () => {
+      updateCollectionButtons();
+      // Remove all current flashcards from display
+      flashcards.forEach(fc => fc.remove());
+    });
   });
 }
 
