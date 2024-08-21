@@ -146,14 +146,14 @@
 
 .top-button-container {
   display: flex;
-  flex-direction: column;
+  flex-direction: row;
   gap: 10px;
 }
 
 #add-to-collection-btn,
 #clear-collection-btn,
 #export-csv-btn {
-  width: 100%;
+  flex: 1;
   padding: 15px; /* Increased padding for larger buttons */
   color: white;
   border: none;
