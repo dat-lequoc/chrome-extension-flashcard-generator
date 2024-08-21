@@ -36,11 +36,17 @@
 }
 
 #close-panel {
-  background: none;
+  background: var(--primary-color);
   border: none;
   color: white;
-  font-size: 24px;
+  font-size: 28px;
   cursor: pointer;
+  padding: 5px 10px;
+  border-radius: 5px;
+}
+
+#close-panel:hover {
+  background: #2980b9;
 }
 
 #mode-selector {
@@ -185,11 +191,19 @@
 }
 
 #clear-collection-btn {
-  background-color: var(--highlight-color);
+  background-color: #e74c3c;
+  margin-right: auto;
 }
 
 #clear-collection-btn:hover {
   background-color: #c0392b;
+}
+
+.top-button-container {
+  display: flex;
+  flex-direction: row;
+  gap: 10px;
+  justify-content: flex-start;
 }
 
 #export-csv-btn {
