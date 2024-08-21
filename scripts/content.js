@@ -257,14 +257,16 @@ function addToCollection() {
   const flashcards = Array.from(document.querySelectorAll(`.flashcard[data-mode="${currentMode}"]`));
   const newFlashcards = flashcards.map(fc => {
     if (currentMode === 'language') {
-      console.log("hi", fc);
       return {
+        word: fc.dataset.word,
         translation: fc.querySelector('.translation')?.textContent.trim(),
-        question: fc.querySelector('.question')?.textContent.trim().slice(2), 
+        question: fc.querySelector('.question')?.textContent.trim().slice(2),
         answer: fc.querySelector('.answer')?.textContent.trim().slice(2),
       };
     } else {
       return {
+        question: fc.querySelector('.question')?.textContent.trim().replace(/^Q:\s*/, ''),
+        answer: fc.querySelector('.answer')?.textContent.trim().replace(/^A:\s*/, ''),
       };
     }
   });
@@ -341,10 +343,21 @@ function updateCollectionButtons() {
 function updateCollection() {
   const currentMode = document.querySelector('.mode-btn.selected').dataset.mode;
   const flashcards = Array.from(document.querySelectorAll(`.flashcard[data-mode="${currentMode}"]`));
-  console("updateColl: ",flashcards );
+  console.log("updateColl: ", flashcards);
   const newFlashcards = flashcards.map(fc => {
-    return {
-    };
+    if (currentMode === 'language') {
+      return {
+        word: fc.dataset.word,
+        translation: fc.querySelector('.translation')?.textContent.trim(),
+        question: fc.querySelector('.question')?.textContent.trim().slice(2),
+        answer: fc.querySelector('.answer')?.textContent.trim().slice(2),
+      };
+    } else {
+      return {
+        question: fc.querySelector('.question')?.textContent.trim().replace(/^Q:\s*/, ''),
+        answer: fc.querySelector('.answer')?.textContent.trim().replace(/^A:\s*/, ''),
+      };
+    }
   });
   
   chrome.runtime.sendMessage({
