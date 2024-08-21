@@ -191,19 +191,27 @@ function hideGeneratingNotification() {
 }
 
 function speakWord(word) {
-  // Cancel any ongoing speech
+  console.log('speakword');
   window.speechSynthesis.cancel();
 
   const utterance = new SpeechSynthesisUtterance(word);
-  const voices = window.speechSynthesis.getVoices();
-  
+
   chrome.storage.sync.get('targetLanguage', (result) => {
     const targetLanguage = result.targetLanguage || 'English';
-    const languageVoice = voices.find(voice => voice.lang.startsWith(targetLanguage.toLowerCase().slice(0, 2)));
-    if (languageVoice) utterance.voice = languageVoice;
-    
-    // Speak the word only once
-    window.speechSynthesis.speak(utterance);
+
+    window.speechSynthesis.onvoiceschanged = () => {
+      const voices = window.speechSynthesis.getVoices();
+      const languageVoice = voices.find(voice => voice.lang.startsWith(targetLanguage.toLowerCase().slice(0, 2)));
+
+      if (languageVoice) utterance.voice = languageVoice;
+
+      window.speechSynthesis.speak(utterance);
+    };
+
+    // Trigger onvoiceschanged if voices are already loaded
+    if (window.speechSynthesis.getVoices().length > 0) {
+      window.speechSynthesis.onvoiceschanged();
+    }
   });
 }
 
@@ -491,7 +499,6 @@ function addEventListeners() {
     if (mode === 'language') {
       const selectedText = getSelectedText();
       if (selectedText && selectedText.length < 20) {
-        // Run speakWord and handleLanguageModeSelection concurrently
         await Promise.all([
           new Promise(resolve => {
             speakWord(selectedText);
