@@ -211,8 +211,8 @@ function saveFlashcard(flashcard) {
 }
 
 function exportFlashcardsCSV() {
+  // No header needed
   let csvContent = "data:text/csv;charset=utf-8,";
-  csvContent += "Question,Answer\n";
   savedFlashcards.forEach(flashcard => {
     csvContent += `"${flashcard.question}","${flashcard.answer}"\n`;
   });
@@ -311,20 +311,17 @@ function exportCSV() {
     let csvContent = "data:text/csv;charset=utf-8,";
 
     if (currentMode === 'language') {
-      csvContent += "Word/Phrase,Translation,Example,Meaning\n";
+      // No header needed for csv
+      console.log(collection);
       collection.forEach(flashcard => {
-        const word = flashcard.question.split(':')[0].trim();
-        const translation = flashcard.question.split(':')[1].trim();
-        const example = flashcard.answer.split('\n')[0].trim();
-        const meaning = flashcard.answer.split('\n')[1].trim();
-        csvContent += `"${word}","${translation}","${example}","${meaning}"\n`;
+        csvContent += `"${flashcard.question}";"• ${flashcard.translation}"<br>"• ${flashcard.answer}"`
       });
     } else {
-      csvContent += "Question,Answer\n";
       collection.forEach(flashcard => {
-        const question = flashcard.question.replace(/^Q:\s*/, '').replace(/"/g, '""');
-        const answer = flashcard.answer.replace(/^A:\s*/, '').replace(/"/g, '""');
-        csvContent += `"${question}","${answer}"\n`;
+        console.log(collection);
+        // const question = flashcard.question.replace(/^Q:\s*/, '').replace(/"/g, '""');
+        // const answer = flashcard.answer.replace(/^A:\s*/, '').replace(/"/g, '""');
+        // csvContent += `"${question}","${answer}"\n`;
       });
     }
 
@@ -626,7 +623,7 @@ function handleLanguageModeSelection(event) {
     const range = selection.getRangeAt(0);
     const span = document.createElement('span');
     span.style.backgroundColor = 'yellow';
-    span.textContent = word;
+    span.textContent = word + ' ';
     range.deleteContents();
     range.insertNode(span);
 

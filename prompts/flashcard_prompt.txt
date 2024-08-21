@@ -16,8 +16,8 @@ To create effective flashcards:
 6. If a question refers to an example or code snippet, include it in the question.
 
 Format your flashcards as follows:
-Q: [Question]
-A: [Answer]
+<Q> [Question] </Q>
+<A> [Answer] </A>
 [... additional flashcards as needed ...]
 
 Create between 1 and 10 flashcards, depending on the complexity and amount of information in the text. More complex or information-rich texts should have more flashcards, while simpler or shorter texts may have fewer.
