@@ -634,6 +634,8 @@ function handleLanguageModeSelection(event) {
     range.deleteContents();
     range.insertNode(span);
 
+    showGeneratingNotification();
+
     chrome.storage.sync.get('targetLanguage', (result) => {
       const targetLanguage = result.targetLanguage || 'English';
       const phrase = getPhrase(range, word);
@@ -641,6 +643,7 @@ function handleLanguageModeSelection(event) {
       generateLanguageFlashcard(word, phrase, targetLanguage)
         .finally(() => {
           processingWord = false;
+          hideGeneratingNotification();
         });
     });
   }
