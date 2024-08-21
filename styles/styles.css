@@ -116,7 +116,8 @@
   color: var(--text-color);
 }
 
-#generate-btn {
+#generate-btn,
+#add-to-collection-btn {
   display: block;
   width: calc(100% - 30px);
   margin: 5px auto;
@@ -129,12 +130,22 @@
   transition: background-color 0.3s ease;
 }
 
-#generate-btn:hover {
+#generate-btn:hover,
+#add-to-collection-btn:hover {
   background-color: #2980b9;
 }
 
 #flashcard-container {
   margin-top: 5px;
+}
+
+#add-to-collection-btn {
+  margin-top: 15px;
+  background-color: var(--secondary-color);
+}
+
+#add-to-collection-btn:hover {
+  background-color: #34495e;
 }
 
 /* Highlight styles for selected text */
