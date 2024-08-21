@@ -210,22 +210,6 @@ function saveFlashcard(flashcard) {
   });
 }
 
-function exportFlashcardsCSV() {
-  // No header needed
-  let csvContent = "data:text/csv;charset=utf-8,";
-  savedFlashcards.forEach(flashcard => {
-    csvContent += `"${flashcard.question}","${flashcard.answer}"\n`;
-  });
-  
-  const encodedUri = encodeURI(csvContent);
-  const link = document.createElement("a");
-  link.setAttribute("href", encodedUri);
-  link.setAttribute("download", "flashcards.csv");
-  document.body.appendChild(link);
-  link.click();
-  document.body.removeChild(link);
-}
-
 function displayFlashcards(flashcards, mode) {
   if (!flashcardContainer) {
     console.error('Flashcard container not found');
@@ -350,6 +334,7 @@ function updateCollectionButtons() {
 function updateCollection() {
   const currentMode = document.querySelector('.mode-btn.selected').dataset.mode;
   const flashcards = Array.from(document.querySelectorAll(`.flashcard[data-mode="${currentMode}"]`));
+  console("updateColl: ",flashcards );
   const newFlashcards = flashcards.map(fc => {
     return {
       question: fc.querySelector('.question')?.textContent || fc.querySelector('.word')?.textContent,
@@ -661,7 +646,7 @@ function generateLanguageFlashcard(word, phrase, targetLanguage) {
       } else {
         console.error('Error generating flashcard:', response.error);
         const errorMessage = response.error === 'Failed to fetch' 
-          ? 'Network error. Please check your internet connection and try again.'
+          ? 'Network error. Right Click => This can read ... => On all sites'
           : `Error: ${response.error}`;
         showErrorNotification(errorMessage);
         reject(new Error(response.error));
