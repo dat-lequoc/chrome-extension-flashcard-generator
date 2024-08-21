@@ -304,12 +304,14 @@ function exportCSV() {
     let csvContent = "data:text/csv;charset=utf-8,";
 
     if (currentMode === 'language') {
-      // No header needed for csv
+      csvContent += "Word,Translation,Question,Answer\n";
       collection.forEach(flashcard => {
-        csvContent += `"${flashcard.question}";"• ${flashcard.translation}"<br>"• ${flashcard.answer}"`
+        csvContent += `"${flashcard.word}","${flashcard.translation}","${flashcard.question}","${flashcard.answer}"\n`;
       });
     } else {
+      csvContent += "Question,Answer\n";
       collection.forEach(flashcard => {
+        csvContent += `"${flashcard.question}","${flashcard.answer}"\n`;
       });
     }
 
