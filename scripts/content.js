@@ -470,7 +470,21 @@ function addEventListeners() {
     }
   });
 
-  document.addEventListener('dblclick', (e) => {
+  // Debounce function
+  function debounce(func, wait) {
+    let timeout;
+    return function executedFunction(...args) {
+      const later = () => {
+        clearTimeout(timeout);
+        func(...args);
+      };
+      clearTimeout(timeout);
+      timeout = setTimeout(later, wait);
+    };
+  }
+
+  // Debounced handleLanguageModeSelection
+  const debouncedHandleLanguageModeSelection = debounce((e) => {
     if (mode === 'language') {
       const selectedText = getSelectedText();
       if (selectedText && selectedText.length < 20) {
@@ -478,7 +492,9 @@ function addEventListeners() {
         handleLanguageModeSelection(e);
       }
     }
-  });
+  }, 300);
+
+  document.addEventListener('dblclick', debouncedHandleLanguageModeSelection);
 }
 
 // Add event listeners for language buttons
@@ -649,7 +665,7 @@ function handleLanguageModeSelection(event) {
   }
 }
 
-document.addEventListener('dblclick', handleLanguageModeSelection);
+// Event listener is now handled in the initialization code above
 
 // Modify the generateLanguageFlashcard function to return a promise
 function generateLanguageFlashcard(word, phrase, targetLanguage) {
