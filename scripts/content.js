@@ -222,9 +222,9 @@ function displayFlashcards(flashcards, mode) {
     flashcardElement.dataset.mode = mode;
     if (mode === 'language') {
       flashcardElement.innerHTML = `
-        <div class="word" style="font-size: 1.2em;"><b>${flashcard.translation}</b></div>
-        <div class="example" style="font-style: italic; opacity: 0.8;">• ${flashcard.question}</div>
-        <div class="meaning">• ${flashcard.answer}</div>
+        <div class="translation" style="font-size: 1.2em;"><b>${flashcard.translation}</b></div>
+        <div class="question" style="font-style: italic; opacity: 0.8;">• ${flashcard.question}</div>
+        <div class="answer">• ${flashcard.answer}</div>
       `;
     } else {
       flashcardElement.innerHTML = `
@@ -257,16 +257,14 @@ function addToCollection() {
   const flashcards = Array.from(document.querySelectorAll(`.flashcard[data-mode="${currentMode}"]`));
   const newFlashcards = flashcards.map(fc => {
     if (currentMode === 'language') {
+      console.log("hi", fc);
       return {
-        word: fc.querySelector('.word')?.textContent.trim(),
-        translation: fc.querySelector('.word b')?.textContent.trim(),
-        question: fc.querySelector('.example')?.textContent.trim().slice(2), // Remove the bullet point
-        answer: fc.querySelector('.meaning')?.textContent.trim().slice(2) // Remove the bullet point
+        translation: fc.querySelector('.translation')?.textContent.trim(),
+        question: fc.querySelector('.question')?.textContent.trim().slice(2), 
+        answer: fc.querySelector('.answer')?.textContent.trim().slice(2),
       };
     } else {
       return {
-        question: fc.querySelector('.question')?.textContent.trim().replace(/^Q:\s*/, ''),
-        answer: fc.querySelector('.answer')?.textContent.trim().replace(/^A:\s*/, '')
       };
     }
   });
@@ -346,8 +344,6 @@ function updateCollection() {
   console("updateColl: ",flashcards );
   const newFlashcards = flashcards.map(fc => {
     return {
-      question: fc.querySelector('.question')?.textContent || fc.querySelector('.word')?.textContent,
-      answer: fc.querySelector('.answer')?.textContent || fc.querySelector('.meaning')?.textContent
     };
   });
   
@@ -648,7 +644,7 @@ function generateLanguageFlashcard(word, phrase, targetLanguage) {
       targetLanguage: targetLanguage
     }, response => {
       hideLoadingIndicator();
-      console.log("generateL:", response);
+      console.log("generateLangluage:", response);
       if (response.success) {
         displayFlashcards(response.flashcards, 'language');
         resolve();
