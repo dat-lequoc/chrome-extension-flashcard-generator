@@ -141,6 +141,7 @@
   display: flex;
   justify-content: space-between;
   margin: 10px 15px;
+  gap: 10px; /* Add gap between buttons */
 }
 
 #add-to-collection-btn,
@@ -153,7 +154,9 @@
   border-radius: 3px;
   cursor: pointer;
   transition: background-color 0.3s ease;
-  margin: 0 5px;
+  white-space: nowrap; /* Prevent text wrapping */
+  overflow: hidden; /* Hide overflowing text */
+  text-overflow: ellipsis; /* Show ellipsis for overflowing text */
 }
 
 #add-to-collection-btn {
