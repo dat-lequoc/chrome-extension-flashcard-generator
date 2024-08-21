@@ -191,6 +191,9 @@ function hideGeneratingNotification() {
 }
 
 function speakWord(word) {
+  // Cancel any ongoing speech
+  window.speechSynthesis.cancel();
+
   const utterance = new SpeechSynthesisUtterance(word);
   const voices = window.speechSynthesis.getVoices();
   
@@ -199,6 +202,7 @@ function speakWord(word) {
     const languageVoice = voices.find(voice => voice.lang.startsWith(targetLanguage.toLowerCase().slice(0, 2)));
     if (languageVoice) utterance.voice = languageVoice;
     
+    // Speak the word only once
     window.speechSynthesis.speak(utterance);
   });
 }
