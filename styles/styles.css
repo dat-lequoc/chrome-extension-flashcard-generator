@@ -139,8 +139,14 @@
 
 .button-container {
   display: flex;
-  justify-content: space-between;
+  flex-direction: column;
   margin: 10px 15px;
+  gap: 10px;
+}
+
+.top-button-container {
+  display: flex;
+  justify-content: space-between;
   gap: 10px;
 }
 
@@ -159,6 +165,10 @@
   overflow: hidden;
   text-overflow: ellipsis;
   font-size: 12px; /* Reduce font size to fit text */
+}
+
+#export-csv-btn {
+  width: 100%;
 }
 
 #add-to-collection-btn {

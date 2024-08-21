@@ -17,6 +17,9 @@ function initializeFlashcardPanel() {
   const buttonContainer = document.createElement('div');
   buttonContainer.className = 'button-container';
   
+  const topButtonContainer = document.createElement('div');
+  topButtonContainer.className = 'top-button-container';
+  
   const addToCollectionBtn = document.createElement('button');
   addToCollectionBtn.id = 'add-to-collection-btn';
   addToCollectionBtn.textContent = 'Add to Collection (0)';
@@ -29,8 +32,10 @@ function initializeFlashcardPanel() {
   exportCsvBtn.id = 'export-csv-btn';
   exportCsvBtn.textContent = 'Export CSV';
   
-  buttonContainer.appendChild(addToCollectionBtn);
-  buttonContainer.appendChild(clearCollectionBtn);
+  topButtonContainer.appendChild(addToCollectionBtn);
+  topButtonContainer.appendChild(clearCollectionBtn);
+  
+  buttonContainer.appendChild(topButtonContainer);
   buttonContainer.appendChild(exportCsvBtn);
   
   document.getElementById('flashcard-panel').appendChild(buttonContainer);
