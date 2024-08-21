@@ -258,7 +258,7 @@ function addToCollection() {
   const newFlashcards = flashcards.map(fc => {
     if (currentMode === 'language') {
       return {
-        word: fc.dataset.word,
+        // word: fc.dataset.word,
         translation: fc.querySelector('.translation')?.textContent.trim(),
         question: fc.querySelector('.question')?.textContent.trim().slice(2),
         answer: fc.querySelector('.answer')?.textContent.trim().slice(2),
@@ -305,16 +305,11 @@ function exportCSV() {
 
     if (currentMode === 'language') {
       // No header needed for csv
-      console.log(collection);
       collection.forEach(flashcard => {
         csvContent += `"${flashcard.question}";"• ${flashcard.translation}"<br>"• ${flashcard.answer}"`
       });
     } else {
       collection.forEach(flashcard => {
-        console.log(collection);
-        // const question = flashcard.question.replace(/^Q:\s*/, '').replace(/"/g, '""');
-        // const answer = flashcard.answer.replace(/^A:\s*/, '').replace(/"/g, '""');
-        // csvContent += `"${question}","${answer}"\n`;
       });
     }
 
