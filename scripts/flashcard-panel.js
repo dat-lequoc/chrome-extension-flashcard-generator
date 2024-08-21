@@ -14,9 +14,26 @@ function initializeFlashcardPanel() {
   const languageButtons = document.getElementById('language-buttons');
   const generateBtn = document.getElementById('generate-btn');
   const flashcardsContainer = document.getElementById('flashcards');
-  const addToCollectionBtn = document.getElementById('add-to-collection-btn');
-  const clearCollectionBtn = document.getElementById('clear-collection-btn');
-  const exportCsvBtn = document.getElementById('export-csv-btn');
+  const buttonContainer = document.createElement('div');
+  buttonContainer.className = 'button-container';
+  
+  const addToCollectionBtn = document.createElement('button');
+  addToCollectionBtn.id = 'add-to-collection-btn';
+  addToCollectionBtn.textContent = 'Add to Collection (0)';
+  
+  const clearCollectionBtn = document.createElement('button');
+  clearCollectionBtn.id = 'clear-collection-btn';
+  clearCollectionBtn.textContent = 'Clear Collection';
+  
+  const exportCsvBtn = document.createElement('button');
+  exportCsvBtn.id = 'export-csv-btn';
+  exportCsvBtn.textContent = 'Export CSV';
+  
+  buttonContainer.appendChild(addToCollectionBtn);
+  buttonContainer.appendChild(clearCollectionBtn);
+  buttonContainer.appendChild(exportCsvBtn);
+  
+  document.getElementById('flashcard-panel').appendChild(buttonContainer);
 
   // Load saved data
   chrome.storage.sync.get(['apiKey', 'selectedModel', 'flashcardCollection', 'languageCollection'], result => {

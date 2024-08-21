@@ -116,10 +116,7 @@
   color: var(--text-color);
 }
 
-#generate-btn,
-#add-to-collection-btn,
-#clear-collection-btn,
-#export-csv-btn {
+#generate-btn {
   display: block;
   width: calc(100% - 30px);
   margin: 5px auto;
@@ -129,9 +126,6 @@
   border-radius: 3px;
   cursor: pointer;
   transition: background-color 0.3s ease;
-}
-
-#generate-btn {
   background-color: var(--primary-color);
 }
 
@@ -139,13 +133,34 @@
   background-color: #2980b9;
 }
 
+#flashcard-container {
+  margin-top: 5px;
+}
+
+.button-container {
+  display: flex;
+  justify-content: space-between;
+  margin: 10px 15px;
+}
+
 #add-to-collection-btn,
+#clear-collection-btn,
 #export-csv-btn {
+  flex: 1;
+  padding: 10px;
+  color: white;
+  border: none;
+  border-radius: 3px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+  margin: 0 5px;
+}
+
+#add-to-collection-btn {
   background-color: var(--secondary-color);
 }
 
-#add-to-collection-btn:hover,
-#export-csv-btn:hover {
+#add-to-collection-btn:hover {
   background-color: #34495e;
 }
 
@@ -157,14 +172,12 @@
   background-color: #c0392b;
 }
 
-#flashcard-container {
-  margin-top: 5px;
+#export-csv-btn {
+  background-color: var(--secondary-color);
 }
 
-#add-to-collection-btn,
-#clear-collection-btn,
-#export-csv-btn {
-  margin-top: 10px;
+#export-csv-btn:hover {
+  background-color: #34495e;
 }
 
 /* Highlight styles for selected text */
