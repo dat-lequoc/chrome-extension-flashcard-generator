@@ -499,13 +499,7 @@ function addEventListeners() {
     if (mode === 'language') {
       const selectedText = getSelectedText();
       if (selectedText && selectedText.length < 20) {
-        await Promise.all([
-          new Promise(resolve => {
-            speakWord(selectedText);
-            resolve();
-          }),
-          handleLanguageModeSelection(e)
-        ]);
+        await handleLanguageModeSelection(e);
       }
     }
   }, 300);
@@ -673,6 +667,7 @@ async function handleLanguageModeSelection(event) {
       const targetLanguage = result.targetLanguage || 'English';
       const phrase = getPhrase(range, word);
       console.log("handleLang:", word, phrase, targetLanguage);
+      speakWord(word);
       await generateLanguageFlashcard(word, phrase, targetLanguage);
     } catch (error) {
       console.error('Error in handleLanguageModeSelection:', error);
