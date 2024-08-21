@@ -117,12 +117,13 @@
 }
 
 #generate-btn,
-#add-to-collection-btn {
+#add-to-collection-btn,
+#clear-collection-btn,
+#export-csv-btn {
   display: block;
   width: calc(100% - 30px);
   margin: 5px auto;
   padding: 10px;
-  background-color: var(--primary-color);
   color: white;
   border: none;
   border-radius: 3px;
@@ -130,22 +131,40 @@
   transition: background-color 0.3s ease;
 }
 
-#generate-btn:hover,
-#add-to-collection-btn:hover {
+#generate-btn {
+  background-color: var(--primary-color);
+}
+
+#generate-btn:hover {
   background-color: #2980b9;
+}
+
+#add-to-collection-btn,
+#export-csv-btn {
+  background-color: var(--secondary-color);
+}
+
+#add-to-collection-btn:hover,
+#export-csv-btn:hover {
+  background-color: #34495e;
+}
+
+#clear-collection-btn {
+  background-color: var(--highlight-color);
+}
+
+#clear-collection-btn:hover {
+  background-color: #c0392b;
 }
 
 #flashcard-container {
   margin-top: 5px;
 }
 
-#add-to-collection-btn {
-  margin-top: 15px;
-  background-color: var(--secondary-color);
-}
-
-#add-to-collection-btn:hover {
-  background-color: #34495e;
+#add-to-collection-btn,
+#clear-collection-btn,
+#export-csv-btn {
+  margin-top: 10px;
 }
 
 /* Highlight styles for selected text */
