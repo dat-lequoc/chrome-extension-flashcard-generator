@@ -487,12 +487,18 @@ function addEventListeners() {
     };
   }
 
-  const debouncedHandleLanguageModeSelection = debounce((e) => {
+  const debouncedHandleLanguageModeSelection = debounce(async (e) => {
     if (mode === 'language') {
       const selectedText = getSelectedText();
       if (selectedText && selectedText.length < 20) {
-        speakWord(selectedText);
-        handleLanguageModeSelection(e);
+        // Run speakWord and handleLanguageModeSelection concurrently
+        await Promise.all([
+          new Promise(resolve => {
+            speakWord(selectedText);
+            resolve();
+          }),
+          handleLanguageModeSelection(e)
+        ]);
       }
     }
   }, 300);
@@ -636,7 +642,7 @@ function generateLanguageFlashcard(word, phrase, targetLanguage) {
 let lastProcessedWord = '';
 let processingWord = false;
 
-function handleLanguageModeSelection(event) {
+async function handleLanguageModeSelection(event) {
   if (mode !== 'language' || processingWord) return;
 
   const selection = window.getSelection();
@@ -655,16 +661,18 @@ function handleLanguageModeSelection(event) {
 
     showGeneratingNotification();
 
-    chrome.storage.sync.get('targetLanguage', (result) => {
+    try {
+      const result = await new Promise((resolve) => chrome.storage.sync.get('targetLanguage', resolve));
       const targetLanguage = result.targetLanguage || 'English';
       const phrase = getPhrase(range, word);
       console.log("handleLang:", word, phrase, targetLanguage);
-      generateLanguageFlashcard(word, phrase, targetLanguage)
-        .finally(() => {
-          processingWord = false;
-          hideGeneratingNotification();
-        });
-    });
+      await generateLanguageFlashcard(word, phrase, targetLanguage);
+    } catch (error) {
+      console.error('Error in handleLanguageModeSelection:', error);
+    } finally {
+      processingWord = false;
+      hideGeneratingNotification();
+    }
   }
 }
 
