@@ -256,10 +256,19 @@ function addToCollection() {
   const currentMode = document.querySelector('.mode-btn.selected').dataset.mode;
   const flashcards = Array.from(document.querySelectorAll(`.flashcard[data-mode="${currentMode}"]`));
   const newFlashcards = flashcards.map(fc => {
-    return {
-      question: fc.querySelector('.question')?.textContent || fc.querySelector('.word')?.textContent,
-      answer: fc.querySelector('.answer')?.textContent || fc.querySelector('.meaning')?.textContent
-    };
+    if (currentMode === 'language') {
+      return {
+        word: fc.querySelector('.word')?.textContent.trim(),
+        translation: fc.querySelector('.word b')?.textContent.trim(),
+        question: fc.querySelector('.example')?.textContent.trim().slice(2), // Remove the bullet point
+        answer: fc.querySelector('.meaning')?.textContent.trim().slice(2) // Remove the bullet point
+      };
+    } else {
+      return {
+        question: fc.querySelector('.question')?.textContent.trim().replace(/^Q:\s*/, ''),
+        answer: fc.querySelector('.answer')?.textContent.trim().replace(/^A:\s*/, '')
+      };
+    }
   });
   
   chrome.runtime.sendMessage({
