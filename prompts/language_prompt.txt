@@ -12,7 +12,7 @@ Present your output in the following format:
 
 Here's an example of the expected output:
 Word: "escalated"
-Phrase: "between the two countries after the border"
+Phrase: "etween the two countries after the border"
 <T>leo thang</T>
 <Q>Tensions <b>escalated</b> between the two countries after the border incident.</Q>
 <A>Increased rapidly in intensity or severity.</A>
@@ -20,8 +20,8 @@ Phrase: "between the two countries after the border"
 
 Additional guidelines:
 - The example sentence must contain the exact form of the word as provided in the input.
-- If you are unsure about any part of the task, state that you don't have enough information to provide an accurate response.
 - If you are unsure about any part of the task, still give the best response you can in the given format, based on the information available.
 - Do not include any additional commentary or explanations outside of the specified output format.
+- Remember to use <b> tags for the word in the example.
 
 Remember to focus solely on the given word and the required outputs. Now, proceed with the task using the provided inputs and following the instructions given above.

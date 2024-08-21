@@ -223,6 +223,7 @@ function displayFlashcards(flashcards, mode) {
     if (mode === 'language') {
       flashcardElement.innerHTML = `
         <div class="translation" style="font-size: 1.2em;">${flashcard.word}: <b>${flashcard.translation}</b></div>
+        <div class="question" style="display: none;">${flashcard.question}</div>
         <div class="answer"><i>• ${flashcard.answer}</i></div>
       `;
     } else {
@@ -256,12 +257,13 @@ function addToCollection() {
   const flashcards = Array.from(document.querySelectorAll(`.flashcard[data-mode="${currentMode}"]`));
   const newFlashcards = flashcards.map(fc => {
     if (currentMode === 'language') {
-      return {
-        // word: fc.dataset.word,
+      const result = {
         translation: fc.querySelector('.translation')?.textContent.trim(),
         question: fc.querySelector('.question')?.textContent.trim().slice(2),
         answer: fc.querySelector('.answer')?.textContent.trim().slice(2),
       };
+      console.log(result);
+      return result;
     } else {
       return {
         question: fc.querySelector('.question')?.textContent.trim().replace(/^Q:\s*/, ''),
