@@ -102,6 +102,22 @@
   color: var(--text-color);
 }
 
+.remove-btn {
+  float: left;
+  background-color: var(--highlight-color);
+  color: white;
+  border: none;
+  padding: 5px 10px;
+  border-radius: 3px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+  margin-right: 10px;
+}
+
+.remove-btn:hover {
+  background-color: #c0392b;
+}
+
 /* Language mode specific styles */
 .flashcard.language-flashcard .word {
   font-size: 1.2em;
