@@ -36,17 +36,24 @@
 }
 
 #close-panel {
-  background: var(--primary-color);
   border: none;
-  color: white;
-  font-size: 28px;
+  color: #808080;
+  font-size: 3.5rem;
+  font-weight: bold;
   cursor: pointer;
-  padding: 5px 10px;
-  border-radius: 5px;
+  padding: 0.25rem 0.75rem;
+  border-radius: 0.5rem;
+  background-color: transparent;
+  transition: color 0.3s ease;
 }
 
 #close-panel:hover {
-  background: #2980b9;
+  color: #ff0000;  /* Changed to red for hover state */
+}
+
+#close-panel:focus {
+  outline: 2px solid var(--focus-color, #3498db);
+  outline-offset: 2px;
 }
 
 #mode-selector {
@@ -103,15 +110,16 @@
 }
 
 .remove-btn {
-  float: left;
+  float: right;
   background-color: var(--highlight-color);
   color: white;
   border: none;
-  padding: 5px 10px;
-  border-radius: 3px;
+  padding: 3px 8px;
+  border-radius: 5px;
   cursor: pointer;
   transition: background-color 0.3s ease;
-  margin-right: 10px;
+  margin-right: 3px;
+  font-size: 0.9em;
 }
 
 .remove-btn:hover {
@@ -190,12 +198,12 @@
 }
 
 #add-to-collection-btn {
-  margin-left: 10px; /* Add left margin to Add to Collection button */
+  margin-left: 15px; /* Add left margin to Add to Collection button */
 }
 
 #export-csv-btn {
-  margin-top: 10px; /* Additional spacing for export button */
-  margin-left: 10px; /* Add left margin to Export CSV button */
+  margin-top: 8px; /* Additional spacing for export button */
+  margin-left: 15px; /* Add left margin to Export CSV button */
 }
 
 #add-to-collection-btn {
