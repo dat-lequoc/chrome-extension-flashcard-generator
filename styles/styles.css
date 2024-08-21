@@ -167,8 +167,13 @@
   text-align: center;
 }
 
+#add-to-collection-btn {
+  margin-left: 10px; /* Add left margin to Add to Collection button */
+}
+
 #export-csv-btn {
   margin-top: 10px; /* Additional spacing for export button */
+  margin-left: 10px; /* Add left margin to Export CSV button */
 }
 
 #add-to-collection-btn {
