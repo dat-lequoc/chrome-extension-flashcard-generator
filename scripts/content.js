@@ -659,9 +659,36 @@ function generateLanguageFlashcard(word, phrase, targetLanguage) {
         displayFlashcards(response.flashcards, 'language');
         resolve();
       } else {
-        alert('Error: ' + response.error);
+        console.error('Error generating flashcard:', response.error);
+        const errorMessage = response.error === 'Failed to fetch' 
+          ? 'Network error. Please check your internet connection and try again.'
+          : `Error: ${response.error}`;
+        showErrorNotification(errorMessage);
         reject(new Error(response.error));
       }
     });
   });
+}
+
+function showErrorNotification(message) {
+  const notification = document.createElement('div');
+  notification.id = 'error-notification';
+  notification.textContent = message;
+  notification.style.cssText = `
+    position: fixed;
+    top: 20px;
+    left: 50%;
+    transform: translateX(-50%);
+    background-color: #ff4444;
+    color: white;
+    padding: 10px 20px;
+    border-radius: 5px;
+    z-index: 10001;
+    max-width: 80%;
+    text-align: center;
+  `;
+  document.body.appendChild(notification);
+  setTimeout(() => {
+    notification.remove();
+  }, 5000);
 }
