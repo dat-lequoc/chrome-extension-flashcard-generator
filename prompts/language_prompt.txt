@@ -4,30 +4,24 @@ Here are the inputs you will be working with:
 
 Word: <word>{{WORD}}</word>
 Phrase: <phrase>{{PHRASE}}</phrase>
-Translation Language: <translationLanguage>{{TRANSLATION_LANGUAGE}}</translationLanguage>
-Target Language for Explanation: <targetLanguage>{{TARGET_LANGUAGE}}</targetLanguage>
-
-Follow these steps to complete the task:
-
-1. Translation:
-   Translate the given word into the specified translation language. Ensure that you provide an accurate and appropriate translation that captures the meaning of the original word.
-
-2. Example Sentence:
-   Create an example sentence that contains the exact form of the given word. The sentence should demonstrate the word's usage in context. If the provided phrase contains the word, you may use it as your example sentence or create a new one. The word must be enclosed in <b></b> tags within the sentence.
-
-3. Explanation:
-   Provide a short, dictionary-style explanation of the word's meaning in the specified target language. The explanation should be concise but informative.
 
 Present your output in the following format:
-<T>[Translation of the word in the translation language]</T>
+<T>[Translation of the word in {{TRANSLATION_LANGUAGE}}]</T>
 <Q>[An example sentence that contains the exact form of the word. The word must be enclosed in <b></b> tags]</Q>
-<A>[Short explanation of the word's meaning in the target language]</A>
+<A>[Short explanation of the word's meaning in {{TARGET_LANGUAGE}}]</A>
+
+Here's an example of the expected output:
+Word: "escalated"
+Phrase: "between the two countries after the border"
+<T>leo thang</T>
+<Q>Tensions <b>escalated</b> between the two countries after the border incident.</Q>
+<A>Increased rapidly in intensity or severity.</A>
+
 
 Additional guidelines:
-- Ensure that the translation is accurate and appropriate for the given word.
 - The example sentence must contain the exact form of the word as provided in the input.
-- The explanation should be clear and easily understandable in the target language.
 - If you are unsure about any part of the task, state that you don't have enough information to provide an accurate response.
+- If you are unsure about any part of the task, still give the best response you can in the given format, based on the information available.
 - Do not include any additional commentary or explanations outside of the specified output format.
 
-Remember to focus solely on the given word and the required outputs. Do not provide any information or translations for words or phrases not explicitly given in the input.
+Remember to focus solely on the given word and the required outputs. Now, proceed with the task using the provided inputs and following the instructions given above.

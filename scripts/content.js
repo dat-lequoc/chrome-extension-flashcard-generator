@@ -222,9 +222,8 @@ function displayFlashcards(flashcards, mode) {
     flashcardElement.dataset.mode = mode;
     if (mode === 'language') {
       flashcardElement.innerHTML = `
-        <div class="translation" style="font-size: 1.2em;"><b>${flashcard.translation}</b></div>
-        <div class="question" style="font-style: italic; opacity: 0.8;">• ${flashcard.question}</div>
-        <div class="answer">• ${flashcard.answer}</div>
+        <div class="translation" style="font-size: 1.2em;">${flashcard.word}: <b>${flashcard.translation}</b></div>
+        <div class="answer"><i>• ${flashcard.answer}</i></div>
       `;
     } else {
       flashcardElement.innerHTML = `
@@ -304,14 +303,12 @@ function exportCSV() {
     let csvContent = "data:text/csv;charset=utf-8,";
 
     if (currentMode === 'language') {
-      csvContent += "Word,Translation,Question,Answer\n";
       collection.forEach(flashcard => {
-        csvContent += `"${flashcard.word}","${flashcard.translation}","${flashcard.question}","${flashcard.answer}"\n`;
+        csvContent += `"${flashcard.question}";"• ${flashcard.translation}"<br>"• ${flashcard.answer}"`
       });
     } else {
-      csvContent += "Question,Answer\n";
       collection.forEach(flashcard => {
-        csvContent += `"${flashcard.question}","${flashcard.answer}"\n`;
+        csvContent += `"${flashcard.question}";"${flashcard.answer}"\n`;
       });
     }
 
